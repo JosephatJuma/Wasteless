@@ -2,7 +2,7 @@
 
 **WasteLess** is a mobile-first platform that helps people **give away items they no longer need** to those who do. From food and clothes to books and tools — you can share them with someone nearby, quickly and safely.
 
-Built as part of a **30-day Build In Public challenge** by [Joseph Sots](https://github.com/JosephatJuma), this project invites both developers and non-tech folks to contribute ideas, test features, and follow progress in real-time.
+Built as part of a **30-day Build In Public challenge** by [Josephat Juma](https://github.com/JosephatJuma), this project invites both developers and non-tech folks to contribute ideas, test features, and follow progress in real-time.
 
 ---
 
@@ -66,7 +66,7 @@ http://localhost:8080/swagger-ui.html
 | 3    | Geolocation + Safety + Polish |
 | 4    | Testing + Feedback + Launch   |
 
-Follow weekly updates on TikTok, X, Instagram, Whatsaap, YouTube or LinkedIn
+Follow weekly updates on [TikTok](https://www.tiktok.com/@jujosephat?_t=ZM-8xT0nZyeprs&_r=1), [X](https://x.com/JuJosephat), [Instagram](https://www.instagram.com/ju_josephat?igsh=MW1oZGlzY2JmZnJqOA==), [Whatsaap](https://whatsapp.com/channel/0029VbAGqIg4tRs0jiG4vt2P), [YouTube](https://www.youtube.com/@CodeWithJJ) or [LinkedIn](https://www.linkedin.com/in/josephat-juma-79515521b/)
 
 ## Built With Purpose
 
