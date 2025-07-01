@@ -26,11 +26,7 @@ const FormButton = ({
     <Button
       mode={mode}
       loading={loading}
-      contentStyle={[
-        styles.content,
-        mode === "contained" && { paddingVertical: 10 },
-        containerStyle,
-      ]}
+      contentStyle={[styles.content, containerStyle, { paddingVertical: 5 }]}
       labelStyle={[
         styles.label,
         bold && styles.boldText,
