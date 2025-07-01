@@ -1,21 +1,8 @@
+import ItemCard from "@/components/items/ItemCard";
 import { useRouter } from "expo-router";
 import * as React from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import {
-  Appbar,
-  Avatar,
-  Card,
-  Chip,
-  FAB,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Appbar, Avatar, FAB, useTheme } from "react-native-paper";
 
 const items = [
   {
@@ -95,30 +82,7 @@ export default function GiveawayScreen() {
 
       <ScrollView contentContainerStyle={styles.container}>
         {items.map((item, index) => (
-          <Card
-            key={index}
-            style={[styles.card, { backgroundColor: colors.background }]}
-            mode="contained"
-            onPress={() =>
-              router.push({
-                pathname: "/(home)/request_item",
-                params: { data: JSON.stringify(item) },
-              })
-            }
-          >
-            <View style={styles.row}>
-              <View style={{ flex: 1 }}>
-                <Text variant="titleMedium" style={styles.title}>
-                  {item.title}
-                </Text>
-                <Text style={styles.description}>{item.description}</Text>
-                <Chip style={styles.pill} compact>
-                  <Text style={styles.pillText}>{item.distance}</Text>
-                </Chip>
-              </View>
-              <Image source={item.image} style={styles.image} />
-            </View>
-          </Card>
+          <ItemCard key={index} item={item} />
         ))}
       </ScrollView>
 
@@ -137,39 +101,7 @@ const styles = StyleSheet.create({
     padding: 0,
     paddingBottom: 100,
   },
-  card: {
-    borderRadius: 0,
-    elevation: 0,
-  },
-  row: {
-    flexDirection: "row",
-    padding: 16,
-  },
-  title: {
-    marginBottom: 4,
-    fontFamily: "OutFitBold",
-  },
-  description: {
-    marginBottom: 8,
-    fontFamily: "OutFitRegular",
-  },
-  pill: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 50,
-  },
-  pillText: {
-    fontSize: 12,
-    fontWeight: "500",
-    fontFamily: "SpaceMono",
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    marginLeft: 12,
-  },
+
   fab: {
     position: "absolute",
     right: 16,
