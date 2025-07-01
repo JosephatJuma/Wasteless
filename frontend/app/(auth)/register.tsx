@@ -1,51 +1,116 @@
+import ErrorBanner from "@/components/alerts/ErrorBanner";
 import FormButton from "@/components/forms/FormButton";
 import InputField from "@/components/forms/InputField";
 import PasswordInput from "@/components/forms/PasswordInput";
+import { supabase } from "@/lib/supabase";
+import { registerSchema } from "@/validations/resister";
 import { useRouter } from "expo-router";
-import React from "react";
+import { useFormik } from "formik";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text, TextInput, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
+type User = {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 const RegisterScreen = () => {
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
   const { colors } = useTheme();
 
   const router = useRouter();
+  const formik = useFormik<User>({
+    initialValues: {
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: registerSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const { error, data } = await supabase.auth.signUp({
+          email: values.email,
+          password: values.password,
+          options: {
+            data: {
+              display_name: values.username,
+            },
+          },
+        });
+        if (error) {
+          setError(error.message);
+        }
+        if (data.user?.confirmed_at) {
+          router.push("/login");
+        }
+        router.push({
+          pathname: "/verify_account",
+          params: { email: data.user?.email },
+        });
+      } catch (error) {
+        console.log(error);
+        setError("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={styles.header}>Create Account</Text>
-      <ScrollView>
-        <TextInput
-          label="Name"
-          placeholder={"John Doe"}
-          value={name}
-          onChangeText={(text) => setName(text)}
-          mode="flat"
+      <ScrollView contentContainerStyle={styles.content}>
+        <InputField
+          label="Full Name *"
+          placeholder={"e.g John Doe"}
+          value={formik.values.name}
+          onChangeText={(text) => formik.setFieldValue("name", text)}
+          errorMessage={formik.errors.name}
+          error={formik.touched.name && !!formik.errors.name}
+        />
+        <InputField
+          label="Display Name"
+          placeholder={"e.g johndoe"}
+          value={formik.values.username}
+          onChangeText={(text) => formik.setFieldValue("username", text)}
+          errorMessage={formik.errors.username}
+          error={formik.touched.username && !!formik.errors.username}
         />
 
         <InputField
-          placeholder="username@email.com"
-          label={"Email"}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
+          placeholder="e'g username@example.com"
+          label={"Email Address *"}
+          value={formik.values.email}
+          onChangeText={(text) => formik.setFieldValue("email", text)}
+          error={formik.touched.email && !!formik.errors.email}
+          errorMessage={formik.errors.email}
         />
 
         <PasswordInput
           placeholder="Password"
-          value={password}
-          label={"Create Password"}
-          onChangeText={(text) => setPassword(text)}
+          value={formik.values.password}
+          label={"Create Password *"}
+          onChangeText={(text) => formik.setFieldValue("password", text)}
+          errorMessage={formik.errors.password}
+          error={formik.touched.password && !!formik.errors.password}
         />
         <PasswordInput
-          placeholder="Confirm Password"
+          placeholder="Confirm Password *"
           label={"Confirm Password"}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
+          value={formik.values.confirmPassword}
+          onChangeText={(text) => formik.setFieldValue("confirmPassword", text)}
+          errorMessage={formik.errors.confirmPassword}
+          error={
+            formik.touched.confirmPassword && !!formik.errors.confirmPassword
+          }
         />
-        <FormButton onPress={() => console.log("Register Pressed")}>
+        <FormButton loading={loading} onPress={() => formik.handleSubmit()}>
           Register
         </FormButton>
 
@@ -64,6 +129,7 @@ const RegisterScreen = () => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      <ErrorBanner error={error} setError={setError} />
     </View>
   );
 };
@@ -71,8 +137,11 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+
     justifyContent: "center",
+  },
+  content: {
+    padding: 20,
   },
   header: {
     fontSize: 20,
