@@ -18,6 +18,10 @@ const AuthenticationLayout = () => {
         }}
       />
       <Stack.Screen name="login" options={{ title: "Login" }} />
+      <Stack.Screen
+        name="verify_account"
+        options={{ title: "Confirm Account" }}
+      />
     </Stack>
   );
 };
