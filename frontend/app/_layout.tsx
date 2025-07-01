@@ -41,6 +41,8 @@ export default function RootLayout() {
     colors: {
       ...MD3DarkTheme.colors,
       primary: "#617AFA",
+      background: "#0C0C1E",
+      surface: "#0C0C1E",
     },
   };
 
