@@ -88,10 +88,12 @@ const styles = StyleSheet.create({
   },
   name: {
     marginTop: 10,
-    fontWeight: "bold",
+    fontFamily: "OutFitBold",
+    fontSize: 20,
   },
   handle: {
-    fontSize: 14,
+    fontSize: 16,
+    fontFamily: "OutFitRegular",
   },
   tabs: {
     flexDirection: "row",
