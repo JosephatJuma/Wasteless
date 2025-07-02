@@ -1,5 +1,6 @@
 package com.codewithjj.wasteless.items.entities;
 
+import com.codewithjj.wasteless.items.enums.*;
 import com.codewithjj.wasteless.items.models.LocationData;
 import com.codewithjj.wasteless.users.entities.User;
 import jakarta.persistence.*;
@@ -15,53 +16,17 @@ public class Item {
     @UuidGenerator
     private UUID id;
     private String title;
-    private enum category {
-        FOOD,
-        CLOTHING,
-        ELECTRONICS,
-        BOOKS,
-        HOME_GOODS,
-        KITCHEN_TOOLS,
-        FURNITURE,
-        OTHER
-    }
+    private ItemCategory category;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime expiryDate;
     private Double  quantity;
-    private enum unitOfMeasure{
-        KG,
-        LITER,
-        COUNT,
-        PIECES,
-        BOX,
-        PAIR,
-        NONE,
-        BUNDLE,
-        BATCH,
-        OTHER
-    }
+    private ItemUnitOfMeasure unitOfMeasure;
     private LocalDateTime purchaseDate;
     private LocalDateTime disposalDate;
-    private enum status {
-        AVAILABLE,
-        PENDING_DISPOSAL,
-        DISPOSED,
-        ARCHIVED,
-        EXPIRED,
-        CONSUMED
-    }
-
-    private enum condition{
-        NEW,
-        USED_LIKE_NEW,
-        GOOD,
-        FAIR,
-        POOR,
-        DAMAGED
-    }
-    private enum storageType{REFRIGERATED, FROZEN, SHELF_STABLE, DRY}
+    private ItemCondition condition;
+    private ItemStorageType  storageType;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -69,6 +34,12 @@ public class Item {
     private LocationData location;
     private String tags;
     private String notes;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
 
 }
