@@ -1,10 +1,10 @@
 package com.codewithjj.wasteless.users.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,9 +19,23 @@ public class User {
     private String role;
     private String email;
     private String name;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt; // Preferred: Use LocalDateTime for modern Java
+
+    // Or if you prefer java.util.Date
+    // @Column(name = "created_at", nullable = false, updatable = false)
+    // private Date createdAt;
+
+    // This method will be called automatically before the entity is persisted (inserted)
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now(); // Set to current time before persisting
+        // Or: this.createdAt = new Date(); if using java.util.Date
+    }
+
     public User() {}
 
-    public User(UUID id, String username, String password, String role, String email, String name) {
+    public User(UUID id, String username, String password, String role, String email, String name, Date createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -73,10 +87,16 @@ public class User {
         return name;
     }
 
+
     public void setName(String name) {
         this.name = name;
     }
-
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+         this.createdAt=createdAt;
+    }
 
 
 

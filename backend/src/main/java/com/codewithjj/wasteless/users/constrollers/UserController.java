@@ -39,7 +39,8 @@ public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreati
             createdUser.getUsername(),
             createdUser.getRole(),
             createdUser.getEmail(),
-            createdUser.getName()
+            createdUser.getName(),
+            createdUser.getCreatedAt()
 
     );
 
