@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Banner, Icon, Text, useTheme } from "react-native-paper";
 type Props = {
   error: string;
@@ -6,6 +6,15 @@ type Props = {
 
 const ErrorBanner = ({ error, setError }: Props & { setError: any }) => {
   const { colors } = useTheme();
+  useEffect(() => {
+    if (!error) return;
+
+    const timeout = setTimeout(() => {
+      setError("");
+    }, 3000);
+
+    return () => clearTimeout(timeout); // cleanup on unmount or before next effect
+  }, [error, setError]);
   return (
     <Banner
       visible={!!error}
