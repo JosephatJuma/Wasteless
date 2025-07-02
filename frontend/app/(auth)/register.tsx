@@ -32,35 +32,38 @@ const RegisterScreen = () => {
     },
     validationSchema: registerSchema,
     onSubmit: async (values) => {
-      setLoading(true);
-      try {
-        const { error, data } = await supabase.auth.signUp({
-          email: values.email,
-          password: values.password,
-          options: {
-            data: {
-              display_name: values.username,
-            },
-          },
-        });
-        if (error) {
-          setError(error.message);
-        }
-        if (data.user?.confirmed_at) {
-          router.push("/login");
-        }
-        router.push({
-          pathname: "/verify_account",
-          params: { email: data.user?.email },
-        });
-      } catch (error) {
-        console.log(error);
-        setError("Something went wrong");
-      } finally {
-        setLoading(false);
-      }
+      handleRegisger(values);
     },
   });
+  const handleRegisger = async (user: User) => {
+    setLoading(true);
+    try {
+      const { error, data } = await supabase.auth.signUp({
+        email: user.email,
+        password: user.password,
+        options: {
+          data: {
+            display_name: user.username,
+          },
+        },
+      });
+      if (error) {
+        setError(error.message);
+      }
+      if (data.user?.confirmed_at) {
+        router.push("/login");
+      }
+      router.push({
+        pathname: "/verify_account",
+        params: { email: data.user?.email },
+      });
+    } catch (error) {
+      console.log(error);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -68,6 +71,8 @@ const RegisterScreen = () => {
       <ScrollView contentContainerStyle={styles.content}>
         <InputField
           label="Full Name *"
+          keyboardType="name-phone-pad"
+          accessibilityLabel="name"
           placeholder={"e.g John Doe"}
           value={formik.values.name}
           onChangeText={(text) => formik.setFieldValue("name", text)}
@@ -76,6 +81,8 @@ const RegisterScreen = () => {
         />
         <InputField
           label="Display Name"
+          accessibilityLabel="username"
+          keyboardType="name-phone-pad"
           placeholder={"e.g johndoe"}
           value={formik.values.username}
           onChangeText={(text) => formik.setFieldValue("username", text)}
@@ -85,7 +92,9 @@ const RegisterScreen = () => {
 
         <InputField
           placeholder="e'g username@example.com"
+          accessibilityLabel="email"
           label={"Email Address *"}
+          keyboardType="email-address"
           value={formik.values.email}
           onChangeText={(text) => formik.setFieldValue("email", text)}
           error={formik.touched.email && !!formik.errors.email}
@@ -101,8 +110,8 @@ const RegisterScreen = () => {
           error={formik.touched.password && !!formik.errors.password}
         />
         <PasswordInput
-          placeholder="Confirm Password *"
-          label={"Confirm Password"}
+          placeholder="Confirm Password"
+          label={"Confirm Password *"}
           value={formik.values.confirmPassword}
           onChangeText={(text) => formik.setFieldValue("confirmPassword", text)}
           errorMessage={formik.errors.confirmPassword}
