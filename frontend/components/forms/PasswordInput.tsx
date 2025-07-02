@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { Keyboard, StyleSheet, View, ViewStyle } from "react-native";
 import { HelperText, TextInput, TextInputProps } from "react-native-paper";
 
 type InputFieldProps = TextInputProps & {
@@ -15,7 +15,6 @@ const PasswordInput = ({
     <View style={styles.container}>
       <TextInput
         placeholder={textInputProps.placeholder}
-        keyboardType="visible-password"
         label={textInputProps.label}
         contentStyle={styles.label}
         mode="flat"
@@ -26,8 +25,9 @@ const PasswordInput = ({
         left={<TextInput.Icon icon={"lock"} />}
         right={
           <TextInput.Icon
-            icon={showPassword ? "eye" : "eye-off"}
+            icon={showPassword ? "eye-off" : "eye"}
             onPress={() => {
+              Keyboard.dismiss();
               setShowPassword((value) => !value);
             }}
           />
