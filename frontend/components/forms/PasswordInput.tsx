@@ -14,7 +14,9 @@ const PasswordInput = ({
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder={"**********"}
+        placeholder={textInputProps.placeholder}
+        keyboardType="visible-password"
+        label={textInputProps.label}
         contentStyle={styles.label}
         mode="flat"
         value={textInputProps.value}
@@ -50,11 +52,11 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 12,
     borderRadius: 10,
-    fontFamily: "SpaceMono",
+    fontFamily: "OutFitBold",
   },
 
   label: {
-    fontFamily: "SpaceMonoBold",
+    fontFamily: "OutFitBold",
   },
 });
 

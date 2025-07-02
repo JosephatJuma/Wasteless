@@ -73,7 +73,6 @@ const OTPVerificationScreen = () => {
     Keyboard.dismiss();
     const enteredOtp = otp.join("");
     try {
-      console.log(enteredOtp);
       setLoading(true);
       const { error, data } = await supabase.auth.verifyOtp({
         token: enteredOtp,
@@ -107,20 +106,20 @@ const OTPVerificationScreen = () => {
       if (error) {
         setError(error.message);
       }
-      if (data) {
-        console.log(data);
-        setTimer(60);
-        setIsResendDisabled(true);
-        setOtp(["", "", "", "", "", ""]);
-        if (inputs.current[0]) {
-          inputs.current[0].focus();
-        }
+      if (data.session) {
+        console.log(data.session);
       }
     } catch (error) {
       setError("Something went wrong");
       throw new Error(error as string);
     } finally {
       setResending(false);
+      setTimer(60);
+      setIsResendDisabled(true);
+      setOtp(["", "", "", "", "", ""]);
+      if (inputs.current[0]) {
+        inputs.current[0].focus();
+      }
     }
   };
 
@@ -168,7 +167,7 @@ const OTPVerificationScreen = () => {
             style={styles.verifyButton}
             onPress={handleSubmit}
             icon={"arrow-right"}
-            disabled={loading || otp.some((digit) => !digit)}
+            disabled={loading || resending || otp.some((digit) => !digit)}
             loading={loading}
           >
             Verify
