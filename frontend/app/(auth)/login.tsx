@@ -1,37 +1,84 @@
+import ErrorBanner from "@/components/alerts/ErrorBanner";
 import FormButton from "@/components/forms/FormButton";
 import InputField from "@/components/forms/InputField";
 import PasswordInput from "@/components/forms/PasswordInput";
+import { supabase } from "@/lib/supabase";
+import { loginSchema } from "@/validations/login";
 import { useRouter } from "expo-router";
-import React from "react";
+import { useFormik } from "formik";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-
+type User = {
+  email: string;
+  password: string;
+};
 const LoginScreen = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const formik = useFormik<User>({
+    initialValues: { email: "", password: "" },
+    onSubmit: async (values) => {
+      handleLogin(values);
+    },
+    validationSchema: loginSchema,
+  });
 
   const router = useRouter();
   const { colors } = useTheme();
+
+  const handleLogin = async (user: User) => {
+    try {
+      setLoading(true);
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: user.password,
+      });
+      if (error) {
+        setError(error?.message);
+      }
+      if (data.session?.access_token) {
+        router.replace("/(home)");
+      }
+    } catch (error) {
+      throw new Error(error as string);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView style={{ width: "100%", height: "100%" }}>
+      <ScrollView
+        style={{ width: "100%", height: "100%" }}
+        contentContainerStyle={{ padding: 20 }}
+      >
         <Text style={styles.title}>Welcome, Enter Your Details to Login</Text>
         <InputField
           label="Email"
           placeholder="username@email.com"
-          value={email}
-          onChangeText={setEmail}
+          value={formik.values.email}
+          onChangeText={(value) => formik.setFieldValue("email", value)}
+          error={formik.touched.email && !!formik.errors.email}
+          errorMessage={formik.errors.email}
         />
         <PasswordInput
           mode="flat"
-          value={password}
-          onChangeText={setPassword}
+          value={formik.values.password}
+          onChangeText={(value) => formik.setFieldValue("password", value)}
+          error={formik.touched.password && !!formik.errors.password}
+          errorMessage={formik.errors.password}
         />
-        <FormButton onPress={() => router.navigate("/(home)")}>
+        <FormButton
+          onPress={() => formik.handleSubmit()}
+          loading={loading}
+          disabled={loading}
+        >
           Login
         </FormButton>
         <FormButton
-          onPress={() => console.log("Login with Google Pressed")}
+          disabled={loading}
+          onPress={() => {}}
           icon={"google"}
           mode="outlined"
         >
@@ -44,6 +91,7 @@ const LoginScreen = () => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      <ErrorBanner error={error} setError={setError} />
     </View>
   );
 };
@@ -51,7 +99,6 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     justifyContent: "center",
   },
   title: {
@@ -61,28 +108,6 @@ const styles = StyleSheet.create({
     fontFamily: "OutFitBold",
   },
 
-  input: {
-    marginBottom: 12,
-    borderRadius: 10,
-    fontFamily: "SpaceMono",
-  },
-  loginButton: {
-    marginTop: 10,
-    borderRadius: 25,
-  },
-  loginButtonContent: {
-    paddingVertical: 8,
-  },
-  googleButton: {
-    marginTop: 12,
-    borderRadius: 25,
-  },
-  googleButtonContent: {
-    paddingVertical: 8,
-  },
-  btnLabel: {
-    fontFamily: "SpaceMonoBold",
-  },
   signupText: {
     marginTop: 18,
     textAlign: "center",
