@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Banner, Icon, Text, useTheme } from "react-native-paper";
 type Props = {
-  error: string;
+  error: string | null;
 };
 
 const ErrorBanner = ({ error, setError }: Props & { setError: any }) => {
