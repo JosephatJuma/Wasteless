@@ -1,76 +1,42 @@
-package com.codewithjj.wasteless.items.entities;
+package com.codewithjj.wasteless.items.dtos;
 
 import com.codewithjj.wasteless.items.enums.*;
 import com.codewithjj.wasteless.items.models.LocationData;
-import com.codewithjj.wasteless.users.entities.User;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "items")
-public class Item {
-    @Id
-    @UuidGenerator
-    private UUID id;
+public class ItemResponseDTO {
+
+    private String id; // assuming each item has a unique ID
     private String title;
     private ItemCategory category;
     private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime expiryDate;
-    private Double  quantity;
+    private Double quantity;
     private ItemUnitOfMeasure unitOfMeasure;
     private LocalDateTime purchaseDate;
     private LocalDateTime disposalDate;
     private ItemCondition condition;
-    private ItemStorageType  storageType;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    private String imageUrl;
+    private ItemStorageType storageType;
+    private UUID userId;
+    private List<String> images;
     private LocationData location;
-
-
-    public Item() {}
-
-    public Item(UUID id, String title, ItemCategory category, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime expiryDate, Double quantity, ItemUnitOfMeasure unitOfMeasure, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, User user, String imageUrl, LocationData location, String tags, String notes) {
-        this.id = id;
-        this.title = title;
-        this.category = category;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.expiryDate = expiryDate;
-        this.quantity = quantity;
-        this.unitOfMeasure = unitOfMeasure;
-        this.purchaseDate = purchaseDate;
-        this.disposalDate = disposalDate;
-        this.condition = condition;
-        this.storageType = storageType;
-        this.user = user;
-        this.imageUrl = imageUrl;
-        this.location = location;
-        this.tags = tags;
-        this.notes = notes;
-    }
-
     private String tags;
     private String notes;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    public ItemResponseDTO(UUID id, String title, String description, Double quantity, String notes, String tags, ItemCategory category, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, UUID userId, LocationData location) {
     }
 
-    public UUID getId() {
+    // Getters & Setters
+
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -96,30 +62,6 @@ public class Item {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDateTime expiryDate) {
-        this.expiryDate = expiryDate;
     }
 
     public Double getQuantity() {
@@ -170,20 +112,20 @@ public class Item {
         this.storageType = storageType;
     }
 
-    public User getUser() {
-        return user;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public LocationData getLocation() {
@@ -210,5 +152,19 @@ public class Item {
         this.notes = notes;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

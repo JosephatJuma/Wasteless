@@ -1,16 +1,19 @@
 package com.codewithjj.wasteless.items.services;
 
+import com.codewithjj.wasteless.items.dtos.ItemCreationDTO;
 import com.codewithjj.wasteless.items.entities.Item;
 import com.codewithjj.wasteless.users.entities.User;
 
+
 import java.util.List;
+import java.util.UUID;
 
 public interface ItemService {
-    public Item createItem(Item item);
+    public Item createItem(ItemCreationDTO item);
     public String deleteItemById(String id);
     public Item getItemById(String id);
     public List<Item> getAllItems();
     public Item updateItem(Item item);
-    public Item requestItemsById(String id, String userId);
+
 
 }
