@@ -1,8 +1,8 @@
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react"; // Add useEffect
 import { Image, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
-
 const images: any = {
   "1": require("../../assets/images/1.jpg"),
   "2": require("../../assets/images/2.jpg"),
@@ -12,6 +12,13 @@ const images: any = {
 const WelcomeScreen = () => {
   const [current, setCurrent] = useState<string>("1");
   const router = useRouter();
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (session?.expires_at && session.expires_at * 1000 > Date.now()) {
+      router.replace("/(home)");
+    }
+  }, [session, router]);
 
   useEffect(() => {
     const interval = setInterval(() => {

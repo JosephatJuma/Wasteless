@@ -56,10 +56,18 @@ const OTPVerificationScreen = () => {
     }
 
     // Submit if last digit is entered
-    if (index === 5 && text) {
-      handleSubmit();
-    }
+    // if (index === 5 && text) {
+    //   handleSubmit();
+    // }
   };
+
+  // Trigger submit when full OTP is entered
+  useEffect(() => {
+    const isOtpComplete = otp.every((digit) => digit.length === 1);
+    if (isOtpComplete) {
+      handleSubmit(); // called with the latest OTP state
+    }
+  }, [otp]);
 
   const handleKeyPress = (e: any, index: number) => {
     if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
@@ -84,7 +92,7 @@ const OTPVerificationScreen = () => {
       }
       if (data.user?.confirmed_at) {
         Alert.alert("Success", "OTP verified successfully!");
-        router.push("/login");
+        router.replace("/login");
       }
     } catch (error) {
       setError("Something went wrong");

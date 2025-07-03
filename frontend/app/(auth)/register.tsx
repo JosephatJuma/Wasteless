@@ -32,34 +32,58 @@ const RegisterScreen = () => {
     },
     validationSchema: registerSchema,
     onSubmit: async (values) => {
-      handleRegisger(values);
+      handleRegister(values);
     },
   });
-  const handleRegisger = async (user: User) => {
+  const handleRegister = async (user: User) => {
     setLoading(true);
+    setError("");
+
     try {
       const { error, data } = await supabase.auth.signUp({
         email: user.email,
         password: user.password,
+
         options: {
           data: {
-            display_name: user.username,
+            display_name: user.name,
+            username: user.username,
           },
         },
       });
+
       if (error) {
-        setError(error.message);
+        // User might already exist but not confirmed
+        if (
+          error.message.includes("already registered") ||
+          error.message.includes("User already")
+        ) {
+          router.push({
+            pathname: "/verify_account",
+            params: { email: user.email },
+          });
+        } else {
+          setError(error.message ?? "Registration failed");
+        }
+        return;
       }
+
+      const email = data.user?.email;
+
+      // If user is already confirmed
       if (data.user?.confirmed_at) {
         router.push("/login");
+      } else if (email) {
+        // Either just registered or already existed but unverified
+        router.push({
+          pathname: "/verify_account",
+          params: { email },
+        });
+      } else {
+        setError("Unexpected response. Please try again.");
       }
-      router.push({
-        pathname: "/verify_account",
-        params: { email: data.user?.email },
-      });
-    } catch (error) {
-      console.log(error);
-      setError("Something went wrong");
+    } catch (err) {
+      setError((err as Error)?.message ?? "Something went wrong");
     } finally {
       setLoading(false);
     }
