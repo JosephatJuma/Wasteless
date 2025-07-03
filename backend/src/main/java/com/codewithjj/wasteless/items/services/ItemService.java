@@ -6,7 +6,6 @@ import com.codewithjj.wasteless.users.entities.User;
 
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ItemService {
     public Item createItem(ItemCreationDTO item);
@@ -14,6 +13,4 @@ public interface ItemService {
     public Item getItemById(String id);
     public List<Item> getAllItems();
     public Item updateItem(Item item);
-
-
 }

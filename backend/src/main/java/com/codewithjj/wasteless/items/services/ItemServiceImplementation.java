@@ -6,8 +6,6 @@ import com.codewithjj.wasteless.items.entities.Item;
 import com.codewithjj.wasteless.items.repositories.ItemRepository;
 import com.codewithjj.wasteless.users.entities.User;
 import com.codewithjj.wasteless.users.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
