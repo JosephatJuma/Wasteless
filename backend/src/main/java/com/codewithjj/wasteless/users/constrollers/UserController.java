@@ -4,6 +4,8 @@ import com.codewithjj.wasteless.users.dtos.UserCreationDTO;
 import com.codewithjj.wasteless.users.dtos.UserResponseDTO;
 import com.codewithjj.wasteless.users.entities.User;
 import com.codewithjj.wasteless.users.services.UserServiceImplementation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("users")
+@Tag(name = "Users", description = "Operations related to users")
 public class UserController {
     private final UserServiceImplementation userService;
 
@@ -23,6 +27,7 @@ public class UserController {
     }
 
 @PostMapping
+@Operation(summary = "Create a new user", description = "Creates a new user and returns the created user")
 public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreationDTO userCreationDTO) {
     //Convert DTO to Entity
     User user = new User();
@@ -55,7 +60,7 @@ public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreati
         return this.userService.updateUser(user);
     }
     @DeleteMapping("{id}")
-    public String deleteUserById(@PathVariable String id) {
+    public String deleteUserById(@PathVariable UUID id) {
         return this.userService.deleteUserById(id);
     }
 

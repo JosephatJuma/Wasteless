@@ -12,7 +12,6 @@ import java.util.UUID;
 public class User {
     @Id
     @UuidGenerator
-    //@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
     private String username;
     private String password;
@@ -20,17 +19,11 @@ public class User {
     private String email;
     private String name;
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // Preferred: Use LocalDateTime for modern Java
+    private LocalDateTime createdAt;
 
-    // Or if you prefer java.util.Date
-    // @Column(name = "created_at", nullable = false, updatable = false)
-    // private Date createdAt;
-
-    // This method will be called automatically before the entity is persisted (inserted)
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now(); // Set to current time before persisting
-        // Or: this.createdAt = new Date(); if using java.util.Date
+        this.createdAt = LocalDateTime.now();
     }
 
     public User() {}
