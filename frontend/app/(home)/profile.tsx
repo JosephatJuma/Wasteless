@@ -23,55 +23,6 @@ import {
 } from "react-native-paper";
 const tabs = ["Profile", "My Items", "My Requests"];
 
-const AccountInfo = (user: any) => {
-  const { colors } = useTheme();
-  return (
-    <View style={styles.section}>
-      <Text variant="titleMedium" style={styles.sectionTitle}>
-        Account Information
-      </Text>
-      <View
-        style={[styles.infoCard, { backgroundColor: colors.elevation.level1 }]}
-      >
-        <List.Item
-          title="Email"
-          description={user?.email || "Not provided"}
-          titleStyle={styles.titleStyle}
-          descriptionStyle={styles.descriptionStyle}
-          left={(props) => <List.Icon {...props} icon="email" />}
-          descriptionNumberOfLines={2}
-        />
-        <Divider />
-        <List.Item
-          title="Account Created"
-          description={moment(user?.created_at).fromNow()}
-          titleStyle={styles.titleStyle}
-          descriptionStyle={styles.descriptionStyle}
-          left={(props) => <List.Icon {...props} icon="calendar" />}
-        />
-        <Divider />
-        <List.Item
-          title="Last Sign In"
-          description={moment(user?.last_sign_in_at).fromNow()}
-          titleStyle={styles.titleStyle}
-          descriptionStyle={styles.descriptionStyle}
-          left={(props) => <List.Icon {...props} icon="clock" />}
-        />
-        <Divider />
-        <List.Item
-          title="Authentication Provider"
-          description={
-            user?.app_metadata?.provider?.toLocaleUpperCase() || "Email"
-          }
-          titleStyle={styles.titleStyle}
-          descriptionStyle={styles.descriptionStyle}
-          left={(props) => <List.Icon {...props} icon="shield-account" />}
-        />
-      </View>
-    </View>
-  );
-};
-
 const MyItems = () => {
   return (
     <View>
@@ -174,7 +125,56 @@ const ProfileScreen = () => {
         </View>
 
         {selectedTab === "My Items" && <MyItems />}
-        {selectedTab === "Profile" && <AccountInfo />}
+        {selectedTab === "Profile" && (
+          <View style={styles.section}>
+            <Text variant="titleMedium" style={styles.sectionTitle}>
+              Account Information
+            </Text>
+            <View
+              style={[
+                styles.infoCard,
+                { backgroundColor: colors.elevation.level1 },
+              ]}
+            >
+              <List.Item
+                title="Email"
+                description={user?.user_metadata?.email || "Not provided"}
+                titleStyle={styles.titleStyle}
+                descriptionStyle={styles.descriptionStyle}
+                left={(props) => <List.Icon {...props} icon="email" />}
+                descriptionNumberOfLines={2}
+              />
+              <Divider />
+              <List.Item
+                title="Account Created"
+                description={moment(user?.created_at).format(
+                  "DD, MMMM YYYY HH:mm A"
+                )}
+                titleStyle={styles.titleStyle}
+                descriptionStyle={styles.descriptionStyle}
+                left={(props) => <List.Icon {...props} icon="calendar" />}
+              />
+              <Divider />
+              <List.Item
+                title="Last Sign In"
+                description={moment(user?.last_sign_in_at).fromNow()}
+                titleStyle={styles.titleStyle}
+                descriptionStyle={styles.descriptionStyle}
+                left={(props) => <List.Icon {...props} icon="clock" />}
+              />
+              <Divider />
+              <List.Item
+                title="Authentication Provider"
+                description={
+                  user?.app_metadata?.provider?.toLocaleUpperCase() || "Email"
+                }
+                titleStyle={styles.titleStyle}
+                descriptionStyle={styles.descriptionStyle}
+                left={(props) => <List.Icon {...props} icon="shield-account" />}
+              />
+            </View>
+          </View>
+        )}
       </ScrollView>
 
       {/* Logout Dialog */}

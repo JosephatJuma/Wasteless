@@ -30,7 +30,10 @@ const RequestItemScreen = () => {
     <View style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="" />
+        <Appbar.Content
+          title={item.title}
+          titleStyle={{ fontFamily: "OutFitBold" }}
+        />
         <Appbar.Action icon="share-variant" onPress={() => {}} />
       </Appbar.Header>
 

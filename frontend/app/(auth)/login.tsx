@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text, TextInput, useTheme } from "react-native-paper";
 type User = {
   email: string;
   password: string;
@@ -57,6 +57,7 @@ const LoginScreen = () => {
         <InputField
           label="Email"
           placeholder="username@email.com"
+          left={<TextInput.Icon icon="email-outline" />}
           value={formik.values.email}
           onChangeText={(value) => formik.setFieldValue("email", value)}
           error={formik.touched.email && !!formik.errors.email}
@@ -64,6 +65,8 @@ const LoginScreen = () => {
         />
         <PasswordInput
           mode="flat"
+          label={"Password"}
+          placeholder="Enter Password"
           value={formik.values.password}
           onChangeText={(value) => formik.setFieldValue("password", value)}
           error={formik.touched.password && !!formik.errors.password}
