@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
 
   input: {
     marginBottom: 12,
-    borderRadius: 10,
     fontFamily: "OutFitBold",
   },
 
