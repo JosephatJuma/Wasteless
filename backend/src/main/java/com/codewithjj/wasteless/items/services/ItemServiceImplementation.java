@@ -28,11 +28,7 @@ public class ItemServiceImplementation implements ItemService{
         Item item = new Item();
         item.setTitle(dto.getTitle());
         UUID userId = UUID.fromString(dto.getUserId());
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-
-        item.setUser(user);
-        item.setUser(user);
+        item.setUserId(userId);
         item.setTitle(dto.getTitle());
         item.setDescription(dto.getDescription());
         item.setQuantity(dto.getQuantity());
@@ -69,6 +65,11 @@ public class ItemServiceImplementation implements ItemService{
     @Override
     public Item updateItem(Item item) {
         return this.itemRepository.save(item);
+    }
+    @Override
+    public List<Item> getItemsByUser(String userId) {
+        UUID id = UUID.fromString(userId);
+        return itemRepository.findByUserId(id);
     }
 
 }

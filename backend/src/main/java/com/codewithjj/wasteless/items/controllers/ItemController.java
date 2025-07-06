@@ -47,5 +47,9 @@ public class ItemController {
     public String deleteItemById(@PathVariable String id) {
         return this.itemServiceImplementation.deleteItemById(id);
     }
+    @GetMapping("/{userId}/my-items")
+    public List<Item> getItemsByUser(@PathVariable String userId) {
+        return this.itemServiceImplementation.getItemsByUser(userId);
+    }
 
 }

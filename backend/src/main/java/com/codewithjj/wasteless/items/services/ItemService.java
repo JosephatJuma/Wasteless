@@ -13,4 +13,5 @@ public interface ItemService {
     public Item getItemById(String id);
     public List<Item> getAllItems();
     public Item updateItem(Item item);
+    public List<Item> getItemsByUser(String userId);
 }

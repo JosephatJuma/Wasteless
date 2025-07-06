@@ -15,8 +15,10 @@ public class Item {
     @Id
     @UuidGenerator
     private UUID id;
+    @Column(length = 50)
     private String title;
     private ItemCategory category;
+    @Column(length = 400)
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -27,16 +29,18 @@ public class Item {
     private LocalDateTime disposalDate;
     private ItemCondition condition;
     private ItemStorageType  storageType;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private UUID userId;
     private String imageUrl;
     private LocationData location;
-
+    @Column(length = 100)
+    private String tags;
+    @Column(length = 200)
+    private String notes;
 
     public Item() {}
 
-    public Item(UUID id, String title, ItemCategory category, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime expiryDate, Double quantity, ItemUnitOfMeasure unitOfMeasure, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, User user, String imageUrl, LocationData location, String tags, String notes) {
+    public Item(UUID id, String title, ItemCategory category, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime expiryDate, Double quantity, ItemUnitOfMeasure unitOfMeasure, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, UUID userId, String imageUrl, LocationData location, String tags, String notes) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -50,15 +54,14 @@ public class Item {
         this.disposalDate = disposalDate;
         this.condition = condition;
         this.storageType = storageType;
-        this.user = user;
+        this.userId = userId;
         this.imageUrl = imageUrl;
         this.location = location;
         this.tags = tags;
         this.notes = notes;
     }
 
-    private String tags;
-    private String notes;
+
 
     @PrePersist
     protected void onCreate() {
@@ -170,12 +173,12 @@ public class Item {
         this.storageType = storageType;
     }
 
-    public User getUser() {
-        return user;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getImageUrl() {
