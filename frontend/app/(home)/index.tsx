@@ -1,24 +1,45 @@
 import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
-import { items } from "@/utils/items";
+
+import { apiCLient } from "@/api/api_client";
 import { useRouter } from "expo-router";
-import * as React from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Appbar, Avatar, FAB, useTheme } from "react-native-paper";
 
 export default function GiveawayScreen() {
   const router = useRouter();
   const { colors } = useTheme();
-  const { session, user } = useAuth();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  // if (!session) {
-  //   router.replace("/login");
-  // }
-  // useEffect(() => {
-  //   if (!session || session?.expires_at * 1000 > Date.now()) {
-  //     router.replace("/login");
-  //   }
-  // }, [session,router]);
+  const [items, setItems] = useState<any>([]);
+
+  const handleFetchItems = async () => {
+    try {
+      setLoading(true);
+      const { data } = await apiCLient.get("/items");
+      setItems(data);
+    } catch (error) {
+      throw new Error(error as string);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchItems();
+  }, []);
+
+  const handleRefresh = () => {
+    handleFetchItems();
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -36,11 +57,15 @@ export default function GiveawayScreen() {
         </TouchableOpacity>
       </Appbar.Header>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        {items.map((item, index) => (
-          <ItemCard key={index} item={item} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={items}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+        }
+        renderItem={({ item }) => <ItemCard item={item} />}
+        keyExtractor={(item) => item?.id}
+        contentContainerStyle={styles.container}
+      />
 
       <FAB
         icon="plus"

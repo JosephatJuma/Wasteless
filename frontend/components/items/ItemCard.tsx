@@ -1,6 +1,7 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Card, Chip, Text, useTheme } from "react-native-paper";
 type ItemCardProps = {
   item: any;
@@ -8,6 +9,9 @@ type ItemCardProps = {
 const ItemCard = ({ item }: ItemCardProps) => {
   const router = useRouter();
   const { colors } = useTheme();
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
   return (
     <Card
       style={[styles.card, { backgroundColor: colors.background }]}
@@ -24,12 +28,21 @@ const ItemCard = ({ item }: ItemCardProps) => {
           <Text variant="titleMedium" style={styles.title}>
             {item.title}
           </Text>
-          <Text style={styles.description}>{item.description}</Text>
+          <Text style={styles.description}>
+            {item.description.slice(0, 100)}
+            {"...."}
+          </Text>
           <Chip style={styles.pill} compact>
             <Text style={styles.pillText}>{item.distance}</Text>
           </Chip>
         </View>
-        <Image source={item.image} style={styles.image} />
+        <Image
+          source={item?.images[1]?.url}
+          style={styles.image}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          transition={1000}
+        />
       </View>
     </Card>
   );
