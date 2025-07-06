@@ -16,7 +16,7 @@ const InputField = ({
   ...textInputProps
 }: InputFieldProps) => {
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <TextInput
         mode="flat"
         value={textInputProps.value}
@@ -31,7 +31,11 @@ const InputField = ({
         {...textInputProps}
       />
       {errorMessage && (
-        <HelperText type="error" visible={true}>
+        <HelperText
+          type="error"
+          visible={true}
+          style={{ fontFamily: "OutFitRegular", margin: 0 }}
+        >
           {errorMessage}
         </HelperText>
       )}
@@ -46,13 +50,11 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    marginBottom: 12,
-
-    fontFamily: "SpaceMono",
+    fontFamily: "OutFitBold",
   },
 
   label: {
-    fontFamily: "SpaceMonoBold",
+    fontFamily: "OutFitMedium",
   },
 });
 
