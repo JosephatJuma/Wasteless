@@ -1,12 +1,7 @@
 package com.codewithjj.wasteless.items.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -20,9 +15,11 @@ public class ItemImage {
     @GeneratedValue(generator = "UUID") // Or @UuidGenerator if using Hibernate 6+
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false) //foreign key column name in item_images table
-    private Item item; // Reference to the Item entity
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    @JsonBackReference
+    private Item item;
+
 
     @Column(nullable = false)
     private String url; // The direct URL to the image (e.g., from Cloudinary, S3)
