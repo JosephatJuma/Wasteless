@@ -32,7 +32,7 @@ public class ItemCreationDTO {
     @NotBlank(message = "User ID cannot be empty")
     private String userId;
 
-    private List<String> images; // assuming images are passed as URLs or base64
+
 
     private LocationData location;
 
@@ -121,13 +121,7 @@ public class ItemCreationDTO {
         this.userId = userId;
     }
 
-    public List<String> getImages() {
-        return images;
-    }
 
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
 
     public LocationData getLocation() {
         return location;

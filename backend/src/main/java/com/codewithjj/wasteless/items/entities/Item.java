@@ -3,10 +3,13 @@ package com.codewithjj.wasteless.items.entities;
 import com.codewithjj.wasteless.items.enums.*;
 import com.codewithjj.wasteless.items.models.LocationData;
 import com.codewithjj.wasteless.users.entities.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,7 +34,9 @@ public class Item {
     private ItemStorageType  storageType;
     @Column(name = "user_id")
     private UUID userId;
-    private String imageUrl;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ItemImage> images = new ArrayList<>();
     private LocationData location;
     @Column(length = 100)
     private String tags;
@@ -40,7 +45,7 @@ public class Item {
 
     public Item() {}
 
-    public Item(UUID id, String title, ItemCategory category, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime expiryDate, Double quantity, ItemUnitOfMeasure unitOfMeasure, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, UUID userId, String imageUrl, LocationData location, String tags, String notes) {
+    public Item(UUID id, String title, ItemCategory category, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime expiryDate, Double quantity, ItemUnitOfMeasure unitOfMeasure, LocalDateTime purchaseDate, LocalDateTime disposalDate, ItemCondition condition, ItemStorageType storageType, UUID userId, List<ItemImage> images, LocationData location, String tags, String notes) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -55,7 +60,7 @@ public class Item {
         this.condition = condition;
         this.storageType = storageType;
         this.userId = userId;
-        this.imageUrl = imageUrl;
+        this.images = images;
         this.location = location;
         this.tags = tags;
         this.notes = notes;
@@ -84,7 +89,13 @@ public class Item {
     public void setTitle(String title) {
         this.title = title;
     }
+    public List<ItemImage> getImages() {
+        return images;
+    }
 
+    public void setImages(List<ItemImage> images) {
+        this.images = images;
+    }
     public ItemCategory getCategory() {
         return category;
     }
@@ -181,13 +192,6 @@ public class Item {
         this.userId = userId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public LocationData getLocation() {
         return location;
