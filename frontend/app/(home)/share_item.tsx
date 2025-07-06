@@ -13,7 +13,7 @@ import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Appbar,
@@ -40,22 +40,39 @@ const ShareItemScreen = () => {
   const [gettingLocation, setGettingLocation] = useState<boolean>(false);
 
   const handleCreateItem = async (values: any): Promise<void> => {
-    setLoading(true);
-    console.log(location?.coords);
-    try {
-      const response = await apiCLient.post("/items", {
+    const formData = new FormData();
+
+    // Append files
+    for (let i = 0; i < images.length; i++) {
+      formData.append("files", {
+        uri: images[i],
+        name: `image${i}.jpg`,
+        type: "image/jpeg",
+      } as any);
+    }
+
+    formData.append(
+      "metadata",
+      JSON.stringify({
         ...values,
         userId: user?.id,
-        location: location?.coords,
+      })
+    );
+    console.log(formData);
+
+    setLoading(true);
+
+    try {
+      const response = await apiCLient.post("/items", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        transformRequest: () => formData, // Important for React Native
       });
-      console.log(response);
+
       if (response.status === 200 || response.status === 201) {
         console.log("✅ Item shared successfully:", response.data);
         setSuccess("Item shared successfully");
-        Alert.alert("Success", "Item shared successfully", [
-          { text: "Ok", onPress: () => router.replace("/(home)") },
-        ]);
-
         formik.resetForm();
         setImages([]);
       } else {
@@ -68,7 +85,6 @@ const ShareItemScreen = () => {
         (error as any)?.response?.data?.message ??
         (error as Error)?.message ??
         "Something went wrong";
-      // console.error("❌ Error creating item:", message, error);
       setError(message);
     } finally {
       setLoading(false);
@@ -190,7 +206,14 @@ const ShareItemScreen = () => {
           />
 
           <Text style={styles.sectionTitle}>Photos</Text>
-          <View style={[styles.photoBox, { borderColor: colors.primary }]}>
+          <View
+            style={[
+              styles.photoBox,
+              {
+                borderColor: images.length > 0 ? colors.primary : colors.error,
+              },
+            ]}
+          >
             {images.length > 0 ? (
               <View style={styles.imageGrid}>
                 {images.map((image, index) => (
@@ -205,7 +228,8 @@ const ShareItemScreen = () => {
               <>
                 <Text style={styles.photoTitle}>Add photos</Text>
                 <Text style={styles.photoSubtitle}>
-                  Upload clear photos of the item you&apos;re giving away
+                  Upload clear photos of the item you&apos;re giving away,
+                  atleas one is required
                 </Text>
               </>
             )}
@@ -232,6 +256,7 @@ const ShareItemScreen = () => {
               </Button>
             </View>
           </View>
+
           {showDetails && (
             <>
               <Text style={styles.sectionTitle}>Details</Text>
@@ -254,7 +279,7 @@ const ShareItemScreen = () => {
             onPress={() => formik.handleSubmit()}
             style={styles.submitButton}
             loading={loading}
-            disabled={!formik.isValid || loading}
+            disabled={images.length === 0 || !formik.isValid || loading}
           >
             Post item
           </FormButton>
