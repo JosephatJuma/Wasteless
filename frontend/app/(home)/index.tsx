@@ -1,7 +1,6 @@
+import { apiClient } from "@/api/api_client";
 import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
-
-import { apiCLient } from "@/api/api_client";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -27,17 +26,14 @@ export default function GiveawayScreen() {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-
   const [items, setItems] = useState<any>([]);
 
   const handleFetchItems = async () => {
     try {
       setLoading(true);
-      const { data } = await apiCLient.get("/items");
+      const { data } = await apiClient.get("/items");
       setItems(data);
-      console.log(data);
     } catch (error) {
-      console.log(error);
       setError((error as Error)?.message ?? "Something went wrong");
     } finally {
       setLoading(false);

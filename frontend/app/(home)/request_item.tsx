@@ -1,11 +1,16 @@
+import { apiClient } from "@/api/api_client";
 import FormButton from "@/components/forms/FormButton";
 import { useAuth } from "@/context/AuthContext";
+import { useLocation } from "@/context/LocationContext";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import numbro from "numbro";
 import React, { useMemo, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import {
   Appbar,
+  Banner,
+  Icon,
   IconButton,
   Surface,
   Text,
@@ -13,13 +18,14 @@ import {
   useTheme,
 } from "react-native-paper";
 
-const { width } = Dimensions.get("window");
-
 const RequestItemScreen = () => {
   const router = useRouter();
   const { colors } = useTheme();
   const { user } = useAuth();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const { getDistanceFromLatLonInMeters } = useLocation();
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
@@ -33,6 +39,24 @@ const RequestItemScreen = () => {
       return {};
     }
   }, [data]);
+
+  const distance = getDistanceFromLatLonInMeters(
+    item?.location?.latitude,
+    item?.location?.longitude
+  );
+
+  const handleDeleteItem = async () => {
+    setIsDeleting(true);
+    try {
+      await apiClient.delete(`/items/${item.id}`);
+      Alert.alert("Success", "Item deleted successfully!");
+      router.replace("/(home)");
+    } catch (err: any) {
+      console.log(err);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleImageSwipe = (direction: "left" | "right") => {
     if (!item.images || item.images.length <= 1) return;
@@ -119,40 +143,94 @@ const RequestItemScreen = () => {
             <View style={styles.metaRow}>
               <View style={styles.metaItem}>
                 <IconButton icon="map-marker" size={16} disabled />
-                <Text style={styles.metaText}>{item.distance}</Text>
+                <Text style={styles.metaText}>
+                  {distance === null || distance === undefined ? (
+                    "Could not get Distance"
+                  ) : distance === 0 ? (
+                    "Near"
+                  ) : (
+                    <Text style={styles.metaText}>
+                      {numbro(distance / 1000).format({ mantissa: 2 })} KM Away
+                    </Text>
+                  )}
+                </Text>
               </View>
               <View style={styles.metaItem}>
                 <IconButton icon="tag" size={16} disabled />
-                <Text style={styles.metaText}>{item.category}</Text>
+                <Text style={styles.metaText}>
+                  {item?.category.replace("_", " ")}
+                </Text>
               </View>
             </View>
 
             {item.userId === user?.id ? (
-              <FormButton
-                mode="outlined"
-                icon={"pencil"}
-                onPress={() => {
-                  // router.push({
-                  //   pathname: "/(home)/edit_item",
-                  //   params: { data: JSON.stringify(item) },
-                  // });
-                }}
-                style={styles.button}
-              >
-                Edit Item
-              </FormButton>
+              <View style={styles.buttonContainer}>
+                <FormButton
+                  mode="outlined"
+                  icon={"pencil"}
+                  onPress={() => {
+                    // router.push({
+                    //   pathname: "/(home)/edit_item",
+                    //   params: { data: JSON.stringify(item) },
+                    // });
+                  }}
+                  style={styles.button}
+                >
+                  Edit Item
+                </FormButton>
+                <FormButton
+                  mode="outlined"
+                  icon={"delete"}
+                  style={styles.button}
+                  onPress={() => setShowConfirmDelete(true)}
+                  loading={isDeleting}
+                >
+                  Delete Item
+                </FormButton>
+              </View>
             ) : (
-              <FormButton
-                mode="contained"
-                onPress={() => {}}
-                style={styles.button}
-              >
-                Request This Item
-              </FormButton>
+              <FormButton style={styles.button}>Request This Item</FormButton>
             )}
           </View>
         </Surface>
       </ScrollView>
+      <Banner
+        visible={showConfirmDelete}
+        actions={[
+          {
+            label: "Cancel",
+            onPress: () => setShowConfirmDelete(false),
+          },
+          {
+            label: "Delete Forever",
+            onPress: () => {},
+            labelStyle: { color: colors.error },
+            loading: isDeleting,
+          },
+        ]}
+        icon={({ size }) => (
+          <Icon
+            source="alert-circle-outline"
+            size={size}
+            color={colors.error}
+          />
+        )}
+        style={{ backgroundColor: colors.elevation.level0 }} // Light yellow background
+      >
+        <Text style={{ fontFamily: "OutFitBold" }}>
+          Delete this shoe from your collection?
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            color: "#616161",
+            marginTop: 4,
+            fontFamily: "OutFitMedium",
+          }}
+        >
+          All associated data will be permanently removed.
+        </Text>
+      </Banner>
     </View>
   );
 };
@@ -236,6 +314,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 16,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
 });
 

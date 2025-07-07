@@ -1,4 +1,4 @@
-import { apiCLient } from "@/api/api_client";
+import { apiClient } from "@/api/api_client";
 import ErrorBanner from "@/components/alerts/ErrorBanner";
 import SuccessBanner from "@/components/alerts/SuccessBanner";
 import FormButton from "@/components/forms/FormButton";
@@ -7,12 +7,12 @@ import InputSelect from "@/components/forms/InputSelect";
 import LocationDisplay from "@/components/location/LocationDisplay";
 import { categories, conditions } from "@/constants/options/items";
 import { useAuth } from "@/context/AuthContext";
+import { useLocation } from "@/context/LocationContext";
 import { shareItemSchema } from "@/validations/share_item";
 import * as ImagePicker from "expo-image-picker";
-import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
@@ -29,15 +29,16 @@ const ShareItemScreen = () => {
   const { colors } = useTheme();
   const { user } = useAuth();
   const [images, setImages] = useState<string[]>([]);
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
-  const [locationError, setLocationError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
-  const [gettingLocation, setGettingLocation] = useState<boolean>(false);
+  const {
+    currentLocation,
+    locationError,
+    getCurrentLocation,
+    gettingLocation,
+  } = useLocation();
 
   const handleCreateItem = async (values: any): Promise<void> => {
     const formData = new FormData();
@@ -56,14 +57,20 @@ const ShareItemScreen = () => {
       JSON.stringify({
         ...values,
         userId: user?.id,
-        //location: location?.coords,
+        location: {
+          latitude: currentLocation?.coords?.latitude,
+          longitude: currentLocation?.coords?.longitude,
+          accuracy: currentLocation?.coords?.accuracy,
+          address: "",
+          city: "",
+        },
       })
     );
 
     setLoading(true);
 
     try {
-      const response = await apiCLient.post("/items", formData, {
+      const response = await apiClient.post("/items", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -74,6 +81,7 @@ const ShareItemScreen = () => {
         setSuccess("Item shared successfully");
         formik.resetForm();
         setImages([]);
+        router.replace("/(home)");
       } else {
         const message = response.data?.message ?? "Something went wrong";
         setError(message);
@@ -104,14 +112,10 @@ const ShareItemScreen = () => {
     },
   });
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
   let text = "Waiting for Location...";
   if (locationError) {
     text = locationError;
-  } else if (location) {
+  } else if (currentLocation) {
     text = "Location:";
   }
 
@@ -128,19 +132,19 @@ const ShareItemScreen = () => {
     }
   };
 
-  async function getCurrentLocation() {
-    setGettingLocation(true);
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setLocationError("Permission to access location was denied");
-      setGettingLocation(false);
-      return;
-    }
+  // async function getCurrentLocation() {
+  //   setGettingLocation(true);
+  //   let { status } = await Location.requestForegroundPermissionsAsync();
+  //   if (status !== "granted") {
+  //     setLocationError("Permission to access location was denied");
+  //     setGettingLocation(false);
+  //     return;
+  //   }
 
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    setGettingLocation(false);
-  }
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   setLocation(location);
+  //   setGettingLocation(false);
+  // }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -194,7 +198,7 @@ const ShareItemScreen = () => {
           />
           <InputSelect
             data={conditions}
-            label="Condition"
+            label="Condition *"
             value={formik.values.condition}
             onChange={(value) => formik.setFieldValue("condition", value)}
             leftIcon="flag"
@@ -257,7 +261,7 @@ const ShareItemScreen = () => {
           {showDetails && (
             <>
               <Text style={styles.sectionTitle}>Details</Text>
-              <LocationDisplay location={location} />
+              <LocationDisplay location={currentLocation} />
               <InputField
                 label="Tags  Seperated by a comma (e.g. size, color)"
                 mode="flat"
@@ -284,7 +288,7 @@ const ShareItemScreen = () => {
       </ScrollView>
       <Portal>
         <Modal
-          visible={!location}
+          visible={!currentLocation}
           onDismiss={() => {}}
           contentContainerStyle={{
             backgroundColor: colors.background,

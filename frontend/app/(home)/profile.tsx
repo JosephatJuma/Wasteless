@@ -1,4 +1,4 @@
-import { apiCLient } from "@/api/api_client";
+import { apiClient } from "@/api/api_client";
 import ErrorBanner from "@/components/alerts/ErrorBanner";
 import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
@@ -36,7 +36,7 @@ const ProfileScreen = () => {
 
   const handleFetchItems = async () => {
     try {
-      const response = await apiCLient.get(`/items/${user?.id}/my-items`);
+      const response = await apiClient.get(`/items/${user?.id}/my-items`);
       setMyItems(response.data);
     } catch (error) {
       throw new Error(error as string);
