@@ -101,9 +101,27 @@ public class ItemServiceImplementation implements ItemService{
     }
 
     @Override
-    public Item updateItem(Item item) {
-        return this.itemRepository.save(item);
+    public Item updateItem(Item updatedItemData, String id) {
+        UUID itemId = UUID.fromString(id);
+
+        Item existingItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
+
+        existingItem.setTitle(updatedItemData.getTitle());
+        existingItem.setDescription(updatedItemData.getDescription());
+        existingItem.setQuantity(updatedItemData.getQuantity());
+        existingItem.setNotes(updatedItemData.getNotes());
+        existingItem.setTags(updatedItemData.getTags());
+        existingItem.setCategory(updatedItemData.getCategory());
+        existingItem.setPurchaseDate(updatedItemData.getPurchaseDate());
+        existingItem.setDisposalDate(updatedItemData.getDisposalDate());
+        existingItem.setCondition(updatedItemData.getCondition());
+        existingItem.setStorageType(updatedItemData.getStorageType());
+        existingItem.setLocation(updatedItemData.getLocation());
+
+        return itemRepository.save(existingItem);
     }
+
     @Override
     public List<Item> getItemsByUser(String userId) {
         UUID id = UUID.fromString(userId);

@@ -12,7 +12,7 @@ public interface ItemService {
     String deleteItemById(String id);
     Item getItemById(String id);
     List<Item> getAllItems();
-    Item updateItem(Item item);
+    Item updateItem(Item item,String id);
     List<Item> getItemsByUser(String userId);
     List<Item> getNearestItems(double latitude, double longitude);
     List<Item> getNearestItemsWithinRange(double latitude, double longitude,double range);

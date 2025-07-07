@@ -57,8 +57,8 @@ public class ItemController {
 
     @Operation(summary = "Update an item", description = "Updates the item with the specified ID")
     @PutMapping("{id}")
-    public Item updateItem(@PathVariable String id, @RequestBody Item item) {
-        return this.itemServiceImplementation.updateItem(item);
+    public Item updateItem( @RequestBody Item item,@PathVariable String id) {
+        return this.itemServiceImplementation.updateItem(item,id);
     }
 
     @Operation(summary = "Get items by location", description = "Returns a list of items near the specified location")
