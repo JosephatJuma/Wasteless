@@ -29,4 +29,33 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             @Param("latitude") double latitude,
             @Param("longitude") double longitude);
 
+    @Query(value = """
+  SELECT *, (
+    6371 * acos(
+      cos(radians(:latitude)) *
+      cos(radians(latitude)) *
+      cos(radians(longitude) - radians(:longitude)) +
+      sin(radians(:latitude)) *
+      sin(radians(latitude))
+    )
+  ) AS distance
+  FROM items
+  WHERE (
+    6371 * acos(
+      cos(radians(:latitude)) *
+      cos(radians(latitude)) *
+      cos(radians(longitude) - radians(:longitude)) +
+      sin(radians(:latitude)) *
+      sin(radians(latitude))
+    )
+  ) < :radius
+  ORDER BY distance ASC
+  LIMIT 10
+  """, nativeQuery = true)
+    List<Item> findNearestItemsWithinRadius(
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude,
+            @Param("radius") double radiusInKm);
+
+
 }

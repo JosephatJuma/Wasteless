@@ -15,4 +15,5 @@ public interface ItemService {
     Item updateItem(Item item);
     List<Item> getItemsByUser(String userId);
     List<Item> getNearestItems(double latitude, double longitude);
+    List<Item> getNearestItemsWithinRange(double latitude, double longitude,double range);
 }
