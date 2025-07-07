@@ -66,7 +66,7 @@ const ShareItemScreen = () => {
         },
       })
     );
-
+    console.log(formData);
     setLoading(true);
 
     try {
@@ -198,7 +198,7 @@ const ShareItemScreen = () => {
           />
           <InputSelect
             data={conditions}
-            label="Condition *"
+            label="Condition"
             value={formik.values.condition}
             onChange={(value) => formik.setFieldValue("condition", value)}
             leftIcon="flag"

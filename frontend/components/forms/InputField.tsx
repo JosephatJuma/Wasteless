@@ -27,7 +27,7 @@ const InputField = ({
         contentStyle={styles.label}
         left={leftIcon && <TextInput.Icon icon={leftIcon} />}
         right={rightIcon && <TextInput.Icon icon={rightIcon} />}
-        error={!!errorMessage}
+        error={textInputProps.error}
         {...textInputProps}
       />
       {errorMessage && (

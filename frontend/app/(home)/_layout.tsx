@@ -16,6 +16,7 @@ const HomeLayout = () => {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="share_item" options={{ headerShown: false }} />
+        <Stack.Screen name="edit_item" options={{ headerShown: false }} />
         <Stack.Screen name="request_item" options={{ headerShown: false }} />
         <Stack.Screen
           name="settings"

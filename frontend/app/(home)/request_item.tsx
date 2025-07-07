@@ -169,10 +169,10 @@ const RequestItemScreen = () => {
                   mode="outlined"
                   icon={"pencil"}
                   onPress={() => {
-                    // router.push({
-                    //   pathname: "/(home)/edit_item",
-                    //   params: { data: JSON.stringify(item) },
-                    // });
+                    router.push({
+                      pathname: "/(home)/edit_item",
+                      params: { data: JSON.stringify(item) },
+                    });
                   }}
                   style={styles.button}
                 >
@@ -189,7 +189,9 @@ const RequestItemScreen = () => {
                 </FormButton>
               </View>
             ) : (
-              <FormButton style={styles.button}>Request This Item</FormButton>
+              <FormButton onPress={() => {}} style={styles.button}>
+                Request This Item
+              </FormButton>
             )}
           </View>
         </Surface>
@@ -203,7 +205,7 @@ const RequestItemScreen = () => {
           },
           {
             label: "Delete Forever",
-            onPress: () => {},
+            onPress: handleDeleteItem,
             labelStyle: { color: colors.error },
             loading: isDeleting,
           },

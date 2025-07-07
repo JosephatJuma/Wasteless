@@ -18,7 +18,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
     item?.location?.latitude,
     item?.location?.longitude
   );
-  console.log(item?.location?.latitude, item?.location?.longitude);
+  //console.log(item?.location?.latitude, item?.location?.longitude);
   return (
     <Card
       style={[styles.card, { backgroundColor: colors.background }]}
@@ -40,7 +40,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
             {item.description.length > 100 ? "...." : ""}
           </Text>
 
-          <Chip style={styles.pill} compact>
+          <Chip style={styles.pill} compact icon={"map-marker"}>
             <Text style={styles.pillText}>
               {distance == null
                 ? "Calculating distance..."
