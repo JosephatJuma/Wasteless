@@ -110,4 +110,9 @@ public class ItemServiceImplementation implements ItemService{
         return itemRepository.findByUserId(id);
     }
 
+    @Override
+    public List<Item> getNearestItems(double latitude, double longitude) {
+        return itemRepository.findNearestItems(latitude, longitude);
+    }
+
 }

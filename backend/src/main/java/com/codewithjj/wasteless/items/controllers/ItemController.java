@@ -77,7 +77,10 @@ public class ItemController {
     public Item updateItem(@PathVariable String id, @RequestBody Item item) {
         return this.itemServiceImplementation.updateItem(item);
     }
-
+@GetMapping("/location/{latitude}/{longitude}")
+    public List<Item> getItemByLocation(@PathVariable double latitude, @PathVariable double longitude) {
+        return this.itemServiceImplementation.getNearestItems(latitude, longitude);
+}
     @DeleteMapping("{id}")
     public String deleteItemById(@PathVariable String id) {
         return this.itemServiceImplementation.deleteItemById(id);

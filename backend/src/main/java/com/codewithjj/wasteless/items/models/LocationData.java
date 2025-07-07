@@ -2,8 +2,10 @@ package com.codewithjj.wasteless.items.models;
 
 
 
-import java.io.Serializable; // Good practice for POJOs stored in entities
+import jakarta.persistence.Embeddable;
 
+import java.io.Serializable; // Good practice for POJOs stored in entities
+@Embeddable
 public class LocationData implements Serializable {
     private Double latitude;
     private Double longitude;

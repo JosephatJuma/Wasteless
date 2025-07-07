@@ -36,6 +36,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ItemImage> images = new ArrayList<>();
+    @Embedded
     private LocationData location;
     @Column(length = 100)
     private String tags;
