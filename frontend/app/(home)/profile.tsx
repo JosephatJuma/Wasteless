@@ -1,11 +1,11 @@
+import { apiCLient } from "@/api/api_client";
 import ErrorBanner from "@/components/alerts/ErrorBanner";
 import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { items } from "@/utils/items";
 import { useRouter } from "expo-router";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
@@ -23,16 +23,6 @@ import {
 } from "react-native-paper";
 const tabs = ["Profile", "My Items", "My Requests"];
 
-const MyItems = () => {
-  return (
-    <View>
-      {items.map((item, index) => (
-        <ItemCard key={index} item={item} />
-      ))}
-    </View>
-  );
-};
-
 const ProfileScreen = () => {
   const [selectedTab, setSelectedTab] = useState<string>("Profile");
   const [loggingOut, setLoggingOut] = useState<boolean>(false);
@@ -41,6 +31,17 @@ const ProfileScreen = () => {
   const router = useRouter();
   const { colors } = useTheme();
   const { user } = useAuth();
+
+  const [myItems, setMyItems] = useState<any>([]);
+
+  const handleFetchItems = async () => {
+    try {
+      const response = await apiCLient.get(`/items/${user?.id}/my-items`);
+      setMyItems(response.data);
+    } catch (error) {
+      throw new Error(error as string);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -57,6 +58,10 @@ const ProfileScreen = () => {
       setLoggingOut(false);
     }
   };
+
+  useEffect(() => {
+    handleFetchItems();
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -124,7 +129,13 @@ const ProfileScreen = () => {
           ))}
         </View>
 
-        {selectedTab === "My Items" && <MyItems />}
+        {selectedTab === "My Items" && (
+          <View>
+            {myItems.map((item: any, index: number) => (
+              <ItemCard key={index} item={item} />
+            ))}
+          </View>
+        )}
         {selectedTab === "Profile" && (
           <View style={styles.section}>
             <Text variant="titleMedium" style={styles.sectionTitle}>
