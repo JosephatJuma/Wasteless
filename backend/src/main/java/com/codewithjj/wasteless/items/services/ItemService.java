@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ItemService {
-    public Item createItem(ItemCreationDTO item,List<MultipartFile> imageFiles);
-    public String deleteItemById(String id);
-    public Item getItemById(String id);
-    public List<Item> getAllItems();
-    public Item updateItem(Item item);
-    public List<Item> getItemsByUser(String userId);
+    Item createItem(ItemCreationDTO item, List<MultipartFile> imageFiles);
+    String deleteItemById(String id);
+    Item getItemById(String id);
+    List<Item> getAllItems();
+    Item updateItem(Item item);
+    List<Item> getItemsByUser(String userId);
 }

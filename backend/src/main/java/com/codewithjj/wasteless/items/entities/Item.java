@@ -2,7 +2,6 @@ package com.codewithjj.wasteless.items.entities;
 
 import com.codewithjj.wasteless.items.enums.*;
 import com.codewithjj.wasteless.items.models.LocationData;
-import com.codewithjj.wasteless.users.entities.User;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;

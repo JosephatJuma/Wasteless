@@ -1,6 +1,5 @@
 package com.codewithjj.wasteless.items.services;
 
-import com.cloudinary.Cloudinary;
 import com.codewithjj.wasteless.cloudinary.services.CloudinaryImageService;
 import com.codewithjj.wasteless.exceptions.ResourceNotFoundException;
 import com.codewithjj.wasteless.items.dtos.ItemCreationDTO;
@@ -76,8 +75,6 @@ public class ItemServiceImplementation implements ItemService{
 
         return savedItem;
     }
-
-
 
     public String deleteItemById(String id) {
         UUID itemId = UUID.fromString(id); // Convert String to UUID
