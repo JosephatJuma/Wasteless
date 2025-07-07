@@ -2,6 +2,7 @@ import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
 
 import { apiCLient } from "@/api/api_client";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,13 +12,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Appbar, Avatar, FAB, useTheme } from "react-native-paper";
+import {
+  Appbar,
+  Avatar,
+  Button,
+  FAB,
+  Text,
+  useTheme,
+} from "react-native-paper";
 
 export default function GiveawayScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const [items, setItems] = useState<any>([]);
 
@@ -26,8 +35,10 @@ export default function GiveawayScreen() {
       setLoading(true);
       const { data } = await apiCLient.get("/items");
       setItems(data);
+      console.log(data);
     } catch (error) {
-      throw new Error(error as string);
+      console.log(error);
+      setError((error as Error)?.message ?? "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -65,6 +76,38 @@ export default function GiveawayScreen() {
         renderItem={({ item }) => <ItemCard item={item} />}
         keyExtractor={(item) => item?.id}
         contentContainerStyle={styles.container}
+        ListEmptyComponent={
+          <View style={styles.ListEmptyContainer}>
+            <View
+              style={{
+                alignItems: "center",
+                maxWidth: 300,
+              }}
+            >
+              <MaterialIcons name="search-off" size={48} color="#ccc" />
+              <Text style={styles.listEmptyText}>No items found</Text>
+              <Text style={styles.listEmptySubtext}>
+                We couldn&apos;t find what you&apos;re looking for.
+              </Text>
+              <Text style={[styles.listEmptySubtext, { color: colors.error }]}>
+                Reason: {error}
+              </Text>
+              <Button
+                onPress={handleRefresh} // Assuming you have a refetch function
+                contentStyle={styles.listEmptyButtonContent}
+                style={{ borderRadius: 80 }}
+                mode="contained"
+                labelStyle={{
+                  color: "#fff",
+                  fontFamily: "OutFitBold",
+                }}
+                icon={"refresh"}
+              >
+                Try Again
+              </Button>
+            </View>
+          </View>
+        }
       />
 
       <FAB
@@ -82,7 +125,32 @@ const styles = StyleSheet.create({
     padding: 0,
     paddingBottom: 100,
   },
-
+  ListEmptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    alignSelf: "center",
+    alignContent: "center",
+  },
+  listEmptyText: {
+    fontSize: 18,
+    marginVertical: 10,
+    textAlign: "center",
+    fontFamily: "OutFitBold",
+  },
+  listEmptySubtext: {
+    fontSize: 14,
+    marginBottom: 20,
+    textAlign: "center",
+    fontFamily: "OutFitRegular",
+  },
+  listEmptyButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+  },
   fab: {
     position: "absolute",
     right: 16,
