@@ -56,9 +56,9 @@ const ShareItemScreen = () => {
       JSON.stringify({
         ...values,
         userId: user?.id,
+        //location: location?.coords,
       })
     );
-    console.log(formData);
 
     setLoading(true);
 
@@ -67,17 +67,15 @@ const ShareItemScreen = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        transformRequest: () => formData, // Important for React Native
+        transformRequest: () => formData,
       });
 
       if (response.status === 200 || response.status === 201) {
-        console.log("✅ Item shared successfully:", response.data);
         setSuccess("Item shared successfully");
         formik.resetForm();
         setImages([]);
       } else {
         const message = response.data?.message ?? "Something went wrong";
-        console.warn("⚠️ Unexpected status code:", response.status, message);
         setError(message);
       }
     } catch (error: unknown) {
@@ -102,7 +100,6 @@ const ShareItemScreen = () => {
     },
     validationSchema: shareItemSchema,
     onSubmit: (values) => {
-      console.log(values);
       handleCreateItem(values);
     },
   });

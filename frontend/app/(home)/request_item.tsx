@@ -33,7 +33,6 @@ const RequestItemScreen = () => {
       return {};
     }
   }, [data]);
-  console.log(data.location);
 
   const handleImageSwipe = (direction: "left" | "right") => {
     if (!item.images || item.images.length <= 1) return;
@@ -145,7 +144,7 @@ const RequestItemScreen = () => {
             ) : (
               <FormButton
                 mode="contained"
-                onPress={() => console.log("Request This Item")}
+                onPress={() => {}}
                 style={styles.button}
               >
                 Request This Item
