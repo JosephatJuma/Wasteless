@@ -32,46 +32,46 @@ const Settings = () => {
             />
           ),
         },
-        {
-          title: "Language",
-          icon: "translate",
-          action: <Text style={styles.actionText}>English</Text>,
-          onPress: () => console.log("Change language"),
-        },
-        {
-          title: "Appearance",
-          icon: "palette",
-          action: <Icon source="chevron-right" size={20} />,
-          onPress: () => console.log("Change appearance"),
-        },
+        // {
+        //   title: "Language",
+        //   icon: "translate",
+        //   action: <Text style={styles.actionText}>English</Text>,
+        //   onPress: () => console.log("Change language"),
+        // },
+        // {
+        //   title: "Appearance",
+        //   icon: "palette",
+        //   action: <Icon source="chevron-right" size={20} />,
+        //   onPress: () => console.log("Change appearance"),
+        // },
       ],
     },
     {
       title: "Security",
       icon: "shield-lock",
       items: [
-        {
-          title: "Biometric Login",
-          icon: "fingerprint",
-          action: (
-            <Switch
-              value={biometricEnabled}
-              onValueChange={() => setBiometricEnabled(!biometricEnabled)}
-            />
-          ),
-        },
+        // {
+        //   title: "Biometric Login",
+        //   icon: "fingerprint",
+        //   action: (
+        //     <Switch
+        //       value={biometricEnabled}
+        //       onValueChange={() => setBiometricEnabled(!biometricEnabled)}
+        //     />
+        //   ),
+        // },
         {
           title: "Change Password",
           icon: "key",
           action: <Icon source="chevron-right" size={20} />,
           onPress: () => console.log("Change password"),
         },
-        {
-          title: "Two-Factor Auth",
-          icon: "cellphone-key",
-          action: <Icon source="chevron-right" size={20} />,
-          onPress: () => console.log("2FA settings"),
-        },
+        // {
+        //   title: "Two-Factor Auth",
+        //   icon: "cellphone-key",
+        //   action: <Icon source="chevron-right" size={20} />,
+        //   onPress: () => console.log("2FA settings"),
+        // },
       ],
     },
     {
