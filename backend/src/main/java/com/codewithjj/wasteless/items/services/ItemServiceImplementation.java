@@ -1,6 +1,7 @@
 package com.codewithjj.wasteless.items.services;
 
 import com.codewithjj.wasteless.cloudinary.services.CloudinaryImageService;
+import com.codewithjj.wasteless.exceptions.NotValidUUIDException;
 import com.codewithjj.wasteless.exceptions.ResourceNotFoundException;
 import com.codewithjj.wasteless.items.dtos.ItemCreationDTO;
 import com.codewithjj.wasteless.items.entities.Item;
@@ -36,19 +37,18 @@ public class ItemServiceImplementation implements ItemService{
         Item item = new Item();
         item.setTitle(dto.getTitle());
         UUID userId = UUID.fromString(dto.getUserId());
-        item.setUserId(userId);
         item.setDescription(dto.getDescription());
         item.setQuantity(dto.getQuantity());
         item.setNotes(dto.getNotes());
         item.setTags(dto.getTags());
         item.setCategory(dto.getCategory());
+        item.setUserId(userId);
         item.setPurchaseDate(dto.getPurchaseDate());
         item.setDisposalDate(dto.getDisposalDate());
         item.setCondition(dto.getCondition());
         item.setStorageType(dto.getStorageType());
         item.setLocation(dto.getLocation());
         item.setUnitOfMeasure(dto.getUnitOfMeasure());
-
         // Save item first to get generated ID
         Item savedItem = itemRepository.save(item);
 
@@ -60,10 +60,9 @@ public class ItemServiceImplementation implements ItemService{
                 String url = cloudinary.getImageUrl(publicId);
 
                 ItemImage image = new ItemImage();
-                image.setPublicId(publicId);  // Set public_id for DB non-null column
+                image.setPublicId(publicId);// Set public_id for DB non-null column
                 image.setUrl(url);
-                image.setItem(savedItem);     // Associate with savedItem (managed entity)
-
+                image.setItem(savedItem); // Associate with savedItem (managed entity)
                 images.add(image);
             }
 
@@ -78,6 +77,7 @@ public class ItemServiceImplementation implements ItemService{
 
     public String deleteItemById(String id) {
         UUID itemId = UUID.fromString(id); // Convert String to UUID
+        itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
 
         List<ItemImage> itemImage = itemImageRepository.findByItemId(itemId);
 
@@ -124,8 +124,14 @@ public class ItemServiceImplementation implements ItemService{
 
     @Override
     public List<Item> getItemsByUser(String userId) {
-        UUID id = UUID.fromString(userId);
-        return itemRepository.findByUserId(id);
+        try {
+            UUID id = UUID.fromString(userId);
+            return itemRepository.findByUserId(id);
+        }
+        catch (IllegalArgumentException e) {
+            throw new NotValidUUIDException("Invalid UUID format: " + userId);
+        }
+
     }
 
     @Override
