@@ -66,7 +66,7 @@ const ShareItemScreen = () => {
         },
       })
     );
-    console.log(formData);
+
     setLoading(true);
 
     try {
@@ -131,20 +131,6 @@ const ShareItemScreen = () => {
       setImages(result.assets.map((asset) => asset.uri));
     }
   };
-
-  // async function getCurrentLocation() {
-  //   setGettingLocation(true);
-  //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   if (status !== "granted") {
-  //     setLocationError("Permission to access location was denied");
-  //     setGettingLocation(false);
-  //     return;
-  //   }
-
-  //   let location = await Location.getCurrentPositionAsync({});
-  //   setLocation(location);
-  //   setGettingLocation(false);
-  // }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

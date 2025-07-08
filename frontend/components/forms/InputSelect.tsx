@@ -119,7 +119,10 @@ const InputSelect = ({
             fontFamily: "OutFitRegular",
           }}
           right={
-            <TextInput.Icon icon="chevron-down" onPress={handleShowModal} />
+            <TextInput.Icon
+              icon="unfold-more-horizontal"
+              onPress={handleShowModal}
+            />
           }
           leftIcon={leftIcon}
         />

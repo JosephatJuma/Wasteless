@@ -19,6 +19,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
     item?.location?.longitude
   );
   //console.log(item?.location?.latitude, item?.location?.longitude);
+
   return (
     <Card
       style={[styles.card, { backgroundColor: colors.background }]}
@@ -53,7 +54,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
           </Chip>
         </View>
         <Image
-          source={item?.images[1]?.url}
+          source={item?.images[0]?.url}
           style={styles.image}
           placeholder={{ blurhash }}
           contentFit="cover"
