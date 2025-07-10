@@ -70,7 +70,6 @@ public class ItemController {
     @Operation(summary = "Get items by location", description = "Returns a list of items within the specified range of the specified location")
     @GetMapping("/location/{latitude}/{longitude}/{range}/{page}/{limit}")
     public List<Item> getItemByLocation(@PathVariable double latitude, @PathVariable double longitude, @PathVariable double range, @PathVariable int page, @PathVariable int limit) {
-        System.out.println(latitude+" "+longitude+" "+range+" "+page);
         return this.itemServiceImplementation.getNearestItemsWithinRange(latitude, longitude,range, page,limit);
     }
 
