@@ -31,6 +31,7 @@ export default function GiveawayScreen() {
   const handleFetchItems = async () => {
     try {
       setLoading(true);
+      setError("");
       const { data } = await apiClient.get("/items");
       setItems(data);
     } catch (error) {
@@ -80,16 +81,33 @@ export default function GiveawayScreen() {
                 maxWidth: 300,
               }}
             >
-              <MaterialIcons name="search-off" size={48} color="#ccc" />
-              <Text style={styles.listEmptyText}>No items found</Text>
-              <Text style={styles.listEmptySubtext}>
-                We couldn&apos;t find what you&apos;re looking for.
-              </Text>
-              <Text style={[styles.listEmptySubtext, { color: colors.error }]}>
-                Reason: {error}
-              </Text>
+              {error ? (
+                <>
+                  <MaterialIcons name="error-outline" size={48} color="#ccc" />
+                  <Text style={styles.listEmptyText}>No items found</Text>
+                  <Text style={styles.listEmptySubtext}>
+                    We couldn&apos;t find what you&apos;re looking for.
+                  </Text>
+                  <Text
+                    style={[styles.listEmptySubtext, { color: colors.error }]}
+                  >
+                    Reason: {error}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <MaterialIcons name="location-off" size={48} color="#ccc" />
+                  <Text style={styles.listEmptyText}>No items near you</Text>
+                  <Text style={styles.listEmptySubtext}>
+                    There are currently no items posted in your area.
+                  </Text>
+                  <Text style={styles.listEmptySubtext}>
+                    Check back later or be the first to share something!
+                  </Text>
+                </>
+              )}
               <Button
-                onPress={handleRefresh} // Assuming you have a refetch function
+                onPress={handleRefresh}
                 contentStyle={styles.listEmptyButtonContent}
                 style={{ borderRadius: 80 }}
                 mode="contained"
