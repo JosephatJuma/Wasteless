@@ -135,13 +135,13 @@ public class ItemServiceImplementation implements ItemService{
     }
 
     @Override
-    public List<Item> getNearestItems(double latitude, double longitude) {
-        return itemRepository.findNearestItems(latitude, longitude);
+    public List<Item> getNearestItems(double latitude, double longitude,int offset,int limit) {
+        return itemRepository.findNearestItems(latitude, longitude, offset, limit);
     }
 
     @Override
-    public List<Item> getNearestItemsWithinRange(double latitude, double longitude, double range) {
-        return itemRepository.findNearestItemsWithinRadius(latitude, longitude, range);
+    public List<Item> getNearestItemsWithinRange(double latitude, double longitude, double range,int offset,int limit) {
+        return itemRepository.findNearestItemsWithinRadius(latitude, longitude, range, offset, limit);
     }
 
 }
