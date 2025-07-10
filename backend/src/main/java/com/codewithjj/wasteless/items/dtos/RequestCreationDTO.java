@@ -1,5 +1,6 @@
 package com.codewithjj.wasteless.items.dtos;
 
+import com.codewithjj.wasteless.items.models.LocationData;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
@@ -12,6 +13,16 @@ public class RequestCreationDTO {
     UUID itemId;
 
     String notes;
+
+    public LocationData getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationData location) {
+        this.location = location;
+    }
+
+    private LocationData location;
 
     public  UUID getUserId() {
         return userId;

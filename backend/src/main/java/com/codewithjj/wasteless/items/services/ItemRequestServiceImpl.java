@@ -31,6 +31,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         itemRequest.setUserId(dto.getUserId());
         itemRequest.setItem(item);
         itemRequest.setNotes(dto.getNotes());
+        item.setLocation(dto.getLocation());
         return itemRequestRepo.save(itemRequest);
     }
 

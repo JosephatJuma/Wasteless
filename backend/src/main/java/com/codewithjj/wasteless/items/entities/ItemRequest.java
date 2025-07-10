@@ -1,6 +1,7 @@
 package com.codewithjj.wasteless.items.entities;
 
 import com.codewithjj.wasteless.items.enums.RequestStatus;
+import com.codewithjj.wasteless.items.models.LocationData;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -25,6 +26,9 @@ public class ItemRequest {
     @JoinColumn(name = "item_id", nullable = false)
     @OnDelete(action= OnDeleteAction.CASCADE)
     private Item item;
+
+    @Embedded
+    private LocationData location;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -85,10 +89,20 @@ public class ItemRequest {
     public RequestStatus getStatus() {
         return status;
     }
-
     public void setStatus(RequestStatus status) {
         this.status = status;
     }
+
+    public LocationData getLocation() {
+        return location;
+    }
+    public void setLocation(LocationData location) {
+        this.location = location;
+
+    }
+
+
+
 
 
 }
