@@ -1,7 +1,6 @@
 package com.codewithjj.wasteless.items.controllers;
 
 import com.codewithjj.wasteless.items.dtos.RequestCreationDTO;
-import com.codewithjj.wasteless.items.entities.Item;
 import com.codewithjj.wasteless.items.entities.ItemRequest;
 import com.codewithjj.wasteless.items.services.ItemRequestServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,13 +37,13 @@ public class RequestController {
         List<ItemRequest> createdItemRequest = itemRequestService.getAllRequestsByUserId(userId);
         return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
     }
-    @DeleteMapping("{id}/reject")
+    @PatchMapping("{id}/reject")
     public  ResponseEntity<ItemRequest> rejectRequest(@PathVariable String id) {
         ItemRequest createdItemRequest = itemRequestService.rejectRequest(id);
         return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
     }
 
-    @PostMapping("{id}/accept")
+    @PatchMapping("{id}/accept")
     public  ResponseEntity<ItemRequest> acceptRequest(@PathVariable String id) {
         ItemRequest createdItemRequest = itemRequestService.acceptRequest(id);
         return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
