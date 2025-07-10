@@ -22,8 +22,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         this.itemRepository = itemRepository;
     }
 
-
-
     @Override
     public ItemRequest createRequest(RequestCreationDTO dto) {
         Item item = itemRepository.findById(dto.getItemId()).orElseThrow(()->new ResourceNotFoundException("The Item selected no longer exists"));
@@ -53,9 +51,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public String deleteRequestById(String id) {
-        UUID requestId = UUID.fromString(id);
-        this.itemRequestRepo.deleteById(requestId);
-        return "Request been cancelled successfully";
+        try {
+            UUID requestId = UUID.fromString(id);
+            this.itemRequestRepo.deleteById(requestId);
+            return "Request been cancelled successfully";
+        }
+        catch (Exception e) {
+            throw new NotValidUUIDException("Invalid UUID format: " + id);
+        }
     }
 
     @Override
