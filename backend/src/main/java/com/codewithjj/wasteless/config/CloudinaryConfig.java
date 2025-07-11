@@ -1,25 +1,31 @@
 package com.codewithjj.wasteless.config;
 
-
 import com.cloudinary.Cloudinary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.github.cdimascio.dotenv.Dotenv;
-
 
 @Configuration
 public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary() {
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        String cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
+        // Prefer environment variable (Render will inject this)
+        String cloudinaryUrl = System.getenv("CLOUDINARY_URL");
 
-        if (cloudinaryUrl != null) {
+        // Optional: fallback to .env only for local dev
+        if (cloudinaryUrl == null || cloudinaryUrl.isBlank()) {
+            try {
+                io.github.cdimascio.dotenv.Dotenv dotenv = io.github.cdimascio.dotenv.Dotenv.configure()
+                        .ignoreIfMissing()
+                        .load();
+                cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
+            } catch (Exception ignored) {}
+        }
+
+        if (cloudinaryUrl != null && !cloudinaryUrl.isBlank()) {
             return new Cloudinary(cloudinaryUrl);
         }
 
-        throw new RuntimeException("CLOUDINARY_URL not found in system environment or .env file");
+        throw new RuntimeException("CLOUDINARY_URL not found in environment or .env file");
     }
 }
