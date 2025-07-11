@@ -9,13 +9,7 @@ public class WastelessApplication {
 
 
     public static void main(String[] args) {
-        // Load .env variables
-        Dotenv dotenv = Dotenv.load();
 
-        // Set them as system properties so Spring Boot can resolve them
-        dotenv.entries().forEach(entry ->
-                System.setProperty(entry.getKey(), entry.getValue())
-        );
         SpringApplication.run(WastelessApplication.class, args);
     }
 
