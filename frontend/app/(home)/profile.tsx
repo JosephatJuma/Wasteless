@@ -1,47 +1,33 @@
-import { apiClient } from "@/api/api_client";
 import ErrorBanner from "@/components/alerts/ErrorBanner";
-import ItemCard from "@/components/items/ItemCard";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "expo-router";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Appbar,
   Avatar,
   Button,
+  Card,
   Dialog,
   Divider,
   Icon,
   List,
   Portal,
   Text,
-  TouchableRipple,
   useTheme,
 } from "react-native-paper";
-const tabs = ["Profile", "My Items", "My Requests"];
 
 const ProfileScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<string>("Profile");
-  const [loggingOut, setLoggingOut] = useState<boolean>(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showLogoutDialog, setShowLogoutDialog] = useState<boolean>(false);
-  const router = useRouter();
-  const { colors } = useTheme();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
   const { user } = useAuth();
-
-  const [myItems, setMyItems] = useState<any>([]);
-
-  const handleFetchItems = async () => {
-    try {
-      const response = await apiClient.get(`/items/${user?.id}/my-items`);
-      setMyItems(response.data);
-    } catch (error) {
-      throw new Error(error as string);
-    }
-  };
+  const { colors } = useTheme();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -59,10 +45,6 @@ const ProfileScreen = () => {
     }
   };
 
-  useEffect(() => {
-    handleFetchItems();
-  }, []);
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Appbar.Header>
@@ -79,12 +61,17 @@ const ProfileScreen = () => {
       </Appbar.Header>
 
       <ScrollView contentContainerStyle={styles.content}>
+        {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
-            <Avatar.Image
-              size={100}
-              source={require("@/assets/images/samples/1.jpg")}
-            />
+            {user?.user_metadata?.avatar_url ? (
+              <Avatar.Image
+                source={{ uri: user.user_metadata.avatar_url }}
+                size={100}
+              />
+            ) : (
+              <Avatar.Icon size={100} icon="account" color="#fff" />
+            )}
             <View style={styles.verificationBadge}>
               {user?.user_metadata?.email_verified ? (
                 <Icon
@@ -97,7 +84,6 @@ const ProfileScreen = () => {
               )}
             </View>
           </View>
-
           <Text variant="titleLarge" style={styles.name}>
             {user?.user_metadata?.display_name || "No name provided"}
           </Text>
@@ -106,86 +92,85 @@ const ProfileScreen = () => {
           </Text>
         </View>
 
-        <View style={[styles.tabs, { borderBottomColor: colors.outline }]}>
-          {tabs.map((tab) => (
-            <TouchableRipple
-              key={tab}
-              onPress={() => setSelectedTab(tab)}
-              borderless
-              style={styles.tabButton}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  selectedTab === tab && {
-                    color: colors.primary,
-                    fontFamily: "OutFitBold",
-                  },
-                ]}
-              >
-                {tab}
-              </Text>
-            </TouchableRipple>
-          ))}
-        </View>
+        {/* Action Links */}
+        <Card
+          style={[styles.actionCard, { backgroundColor: colors.surface }]}
+          mode="contained"
+        >
+          <Card.Title
+            title="Your Activities"
+            titleStyle={styles.sectionTitle}
+          />
+          <Card.Content>
+            <Pressable onPress={() => router.push("/my-items")}>
+              <List.Item
+                title="My Items"
+                description="Manage your items"
+                titleStyle={{ fontFamily: "OutFitMedium" }}
+                descriptionStyle={{ fontFamily: "OutFitRegular" }}
+                left={() => <List.Icon icon="package-variant" />}
+                right={() => <List.Icon icon="chevron-right" />}
+              />
+            </Pressable>
+            <Divider />
+            <Pressable onPress={() => router.push("/my-requests")}>
+              <List.Item
+                title="My Requests"
+                description="View your incoming and outgoing requests"
+                titleStyle={styles.itemTitle}
+                descriptionStyle={styles.itemDescription}
+                left={() => <List.Icon icon="clipboard-list-outline" />}
+                right={() => <List.Icon icon="chevron-right" />}
+              />
+            </Pressable>
+          </Card.Content>
+        </Card>
 
-        {selectedTab === "My Items" && (
-          <View>
-            {myItems.map((item: any, index: number) => (
-              <ItemCard key={index} item={item} />
-            ))}
-          </View>
-        )}
-        {selectedTab === "Profile" && (
-          <View style={styles.section}>
-            <Text variant="titleMedium" style={styles.sectionTitle}>
-              Account Information
-            </Text>
-            <View
-              style={[
-                styles.infoCard,
-                { backgroundColor: colors.elevation.level1 },
-              ]}
-            >
-              <List.Item
-                title="Email"
-                description={user?.user_metadata?.email || "Not provided"}
-                titleStyle={styles.titleStyle}
-                descriptionStyle={styles.descriptionStyle}
-                left={(props) => <List.Icon {...props} icon="email" />}
-                descriptionNumberOfLines={2}
-              />
-              <Divider />
-              <List.Item
-                title="Account Created"
-                description={moment(user?.created_at).format(
-                  "DD, MMMM YYYY HH:mm A"
-                )}
-                titleStyle={styles.titleStyle}
-                descriptionStyle={styles.descriptionStyle}
-                left={(props) => <List.Icon {...props} icon="calendar" />}
-              />
-              <Divider />
-              <List.Item
-                title="Last Sign In"
-                description={moment(user?.last_sign_in_at).fromNow()}
-                titleStyle={styles.titleStyle}
-                descriptionStyle={styles.descriptionStyle}
-                left={(props) => <List.Icon {...props} icon="clock" />}
-              />
-              <Divider />
-              <List.Item
-                title="Authentication Provider"
-                description={
-                  user?.app_metadata?.provider?.toLocaleUpperCase() || "Email"
-                }
-                titleStyle={styles.titleStyle}
-                descriptionStyle={styles.descriptionStyle}
-                left={(props) => <List.Icon {...props} icon="shield-account" />}
-              />
-            </View>
-          </View>
-        )}
+        {/* Account Info */}
+        <Card
+          style={[styles.actionCard, { backgroundColor: colors.surface }]}
+          mode="contained"
+        >
+          <Card.Title
+            title="Account Information"
+            titleStyle={styles.sectionTitle}
+          />
+          <Card.Content>
+            <List.Item
+              title="Email"
+              description={user?.user_metadata?.email || "Not provided"}
+              left={() => <List.Icon icon="email" />}
+              titleStyle={styles.itemTitle}
+              descriptionStyle={styles.itemDescription}
+            />
+            <Divider />
+            <List.Item
+              title="Account Created"
+              description={moment(user?.created_at).format(
+                "DD MMM, YYYY HH:mm A"
+              )}
+              titleStyle={styles.itemTitle}
+              descriptionStyle={styles.itemDescription}
+              left={() => <List.Icon icon="calendar" />}
+            />
+            <Divider />
+            <List.Item
+              title="Last Sign In"
+              description={moment(user?.last_sign_in_at).fromNow()}
+              left={() => <List.Icon icon="clock" />}
+            />
+            <Divider />
+            <List.Item
+              title="Auth Provider"
+              description={
+                user?.app_metadata?.provider?.toUpperCase() || "EMAIL"
+              }
+              titleStyle={styles.itemTitle}
+              descriptionStyle={styles.itemDescription}
+              left={() => <List.Icon icon="shield-account" />}
+            />
+          </Card.Content>
+        </Card>
       </ScrollView>
 
       {/* Logout Dialog */}
@@ -197,7 +182,7 @@ const ProfileScreen = () => {
         >
           <Dialog.Icon icon="logout-variant" size={36} color={colors.error} />
           <Dialog.Title style={{ textAlign: "center", fontWeight: "bold" }}>
-            Log out
+            Log out
           </Dialog.Title>
           <Dialog.Content>
             {loggingOut ? (
@@ -207,17 +192,14 @@ const ProfileScreen = () => {
               </View>
             ) : (
               <Text variant="bodyMedium">
-                Are you sure you want to log out?
+                Are you sure you want to log out?
               </Text>
             )}
           </Dialog.Content>
-          <Dialog.Actions
-            style={{ justifyContent: "flex-end", paddingBottom: 8 }}
-          >
+          <Dialog.Actions>
             <Button
               onPress={() => setShowLogoutDialog(false)}
               disabled={loggingOut}
-              mode="text"
             >
               Cancel
             </Button>
@@ -225,10 +207,9 @@ const ProfileScreen = () => {
               onPress={handleLogout}
               loading={loggingOut}
               disabled={loggingOut}
-              mode="text"
               labelStyle={{ color: colors.error }}
             >
-              Log out
+              Log out
             </Button>
           </Dialog.Actions>
         </Dialog>
@@ -247,12 +228,9 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20,
   },
   avatarContainer: {
     position: "relative",
-    marginBottom: 10,
   },
   verificationBadge: {
     position: "absolute",
@@ -271,37 +249,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "OutFitRegular",
   },
-  section: {
-    marginTop: 20,
-  },
   sectionTitle: {
     fontFamily: "OutFitBold",
-    marginBottom: 8,
-    paddingLeft: 8,
+    fontSize: 16,
   },
   infoCard: {
     borderRadius: 12,
-    elevation: 2,
-    overflow: "hidden",
   },
-  titleStyle: { fontFamily: "OutFitBold" },
-  descriptionStyle: { fontFamily: "OutFitRegular" },
-  tabs: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 30,
-    borderBottomWidth: 0.5,
-    paddingBottom: 8,
+  actionCard: {
+    borderRadius: 12,
   },
-  tabButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+  itemTitle: {
+    fontFamily: "OutFitMedium",
   },
-  tabText: {
-    fontSize: 14,
+  itemDescription: {
     fontFamily: "OutFitRegular",
   },
-
   loadingContainer: {
     flexDirection: "row",
     alignItems: "center",
