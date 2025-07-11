@@ -3,7 +3,6 @@ package com.codewithjj.wasteless.cloudinary.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.codewithjj.wasteless.items.services.ImageStorageService;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,19 +10,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
+
 @Service
 public class CloudinaryImageService implements ImageStorageService {
-    Dotenv dotenv = Dotenv.load();
-    private final Cloudinary cloudinary =new Cloudinary(dotenv.get("CLOUDINARY_URL"));
-    private final String baseUrl;
+
+    private final Cloudinary cloudinary;
+    private final String cloudinaryBaseUrl;
 
     public CloudinaryImageService(
-            Cloudinary cloudinary,
-            @Value("${app.image.base-url:https://res.cloudinary.com/default/image/upload/}") String baseUrl) {
-        //this.cloudinary = cloudinary;
-        this.baseUrl = baseUrl;
+            @Value("${CLOUDINARY_URL}") String cloudinaryUrl,
+            @Value("${app.image.base-url:https://res.cloudinary.com/default/image/upload/}") String cloudinaryBaseUrl) {
+        this.cloudinary = new Cloudinary(cloudinaryUrl);
+        this.cloudinaryBaseUrl = cloudinaryBaseUrl;
 
-        System.out.println(">>> CloudinaryImageService initialized with baseUrl: " + baseUrl);
+        System.out.println(">>> CloudinaryImageService initialized with baseUrl: " + cloudinaryBaseUrl);
     }
 
     @Override
