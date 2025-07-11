@@ -145,7 +145,7 @@ const ShareItemScreen = () => {
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
+        // keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
           <InputField

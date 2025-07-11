@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocation } from "@/context/LocationContext";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import moment from "moment";
 import numbro from "numbro";
 import React, { useMemo, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
@@ -142,7 +143,7 @@ const RequestItemScreen = () => {
 
             <View style={styles.metaRow}>
               <View style={styles.metaItem}>
-                <IconButton icon="map-marker" size={16} disabled />
+                <Icon source="map-marker" size={20} />
                 <Text style={styles.metaText}>
                   {distance === null || distance === undefined ? (
                     "Could not get Distance"
@@ -156,9 +157,15 @@ const RequestItemScreen = () => {
                 </Text>
               </View>
               <View style={styles.metaItem}>
-                <IconButton icon="tag" size={16} disabled />
+                <Icon source="tag" size={20} />
                 <Text style={styles.metaText}>
                   {item?.category.replace("_", " ")}
+                </Text>
+              </View>
+              <View style={styles.metaItem}>
+                <Icon source="clock-outline" size={20} />
+                <Text style={styles.metaText}>
+                  Posted {moment(item.createdAt).fromNow()}
                 </Text>
               </View>
             </View>
@@ -298,15 +305,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   metaRow: {
-    flexDirection: "row",
+    //flexDirection: "row",
     justifyContent: "flex-start",
-    gap: 32,
+    gap: 2,
     marginBottom: 32,
   },
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 20,
+    margin: 2,
   },
   metaText: {
     marginLeft: -8,

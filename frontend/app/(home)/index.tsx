@@ -71,7 +71,7 @@ export default function GiveawayScreen() {
     } finally {
       setLoading(false);
     }
-  }, [url]);
+  }, []);
 
   const handleLoadMore = useCallback(async () => {
     if (loading || items.length % limit !== 0) return; //No more items
@@ -154,10 +154,7 @@ export default function GiveawayScreen() {
           title="WasteLess"
           titleStyle={{ fontFamily: "OutFitBold" }}
         />
-        <Appbar.Action
-          icon="map-marker-distance"
-          onPress={() => console.log("map")}
-        />
+        {/* <Appbar.Action icon="map-marker-distance" onPress={() => {}} /> */}
         <Appbar.Action
           icon={layout === "list" ? "view-grid" : "view-list"}
           onPress={handleChangeLayout}
