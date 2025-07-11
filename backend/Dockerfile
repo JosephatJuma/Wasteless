@@ -1,16 +1,18 @@
-# Use a lightweight base image with JDK
+# Stage 1: Build the app using Maven
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the app using a slim JDK image
 FROM openjdk:17-jdk-slim
 LABEL authors="Josephat Juma"
-
-# Set working directory
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
-# Optionally set Cloudinary URL (or pass it at runtime instead)
-# ENV CLOUDINARY_URL=cloudinary://...
-
-# Copy the built JAR from host into the container
-COPY target/wasteless-0.0.1-SNAPSHOT.jar app.jar
+# Copy built jar from the builder stage
+COPY --from=builder /app/target/wasteless-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the default Spring Boot port
 EXPOSE 8080
