@@ -159,7 +159,7 @@ const RequestItemScreen = () => {
               <View style={styles.metaItem}>
                 <Icon source="tag" size={20} />
                 <Text style={styles.metaText}>
-                  {item?.category.replace("_", " ")}
+                  {item?.category.replace(/_/g, " ")}
                 </Text>
               </View>
               <View style={styles.metaItem}>
