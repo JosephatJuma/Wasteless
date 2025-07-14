@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Light theme - WasteLess green & earthy palette */
+    --background: 30 20% 98%;
+    --foreground: 160 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 160 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 10% 15%;
+
+    /* Blue primary */
+    --primary: 228 94% 67%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Warm earthy secondary */
+    --secondary: 30 15% 92%;
+    --secondary-foreground: 160 10% 25%;
+
+    --muted: 30 10% 95%;
+    --muted-foreground: 160 8% 45%;
+
+    /* Warm amber accent for CTAs */
+    --accent: 45 90% 55%;
+    --accent-foreground: 30 10% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 12% 88%;
+    --input: 30 12% 88%;
+    --ring: 228 94% 67%;
+
+    /* Custom WasteLess design tokens */
+    --primary-light: 228 85% 75%;
+    --primary-glow: 228 70% 85%;
+    --earth-warm: 25 35% 75%;
+    --earth-deep: 20 25% 25%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(228 94% 67%), hsl(228 85% 75%));
+    --gradient-hero: linear-gradient(135deg, hsl(228 94% 67%), hsl(45 90% 55%));
+    --gradient-subtle: linear-gradient(180deg, hsl(30 20% 98%), hsl(30 15% 96%));
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 8px hsl(228 94% 67% / 0.1);
+    --shadow-card: 0 4px 12px hsl(160 10% 15% / 0.08);
+    --shadow-button: 0 2px 4px hsl(228 94% 67% / 0.2);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark theme - Deep blue with warm accents */
+    --background: 240 50% 9%;
+    --foreground: 30 15% 92%;
+
+    --card: 160 20% 12%;
+    --card-foreground: 30 15% 92%;
+
+    --popover: 160 20% 12%;
+    --popover-foreground: 30 15% 92%;
+
+    /* Lighter blue for dark mode primary */
+    --primary: 228 85% 70%;
+    --primary-foreground: 240 50% 9%;
+
+    --secondary: 160 15% 18%;
+    --secondary-foreground: 30 15% 85%;
+
+    --muted: 160 12% 15%;
+    --muted-foreground: 30 8% 65%;
+
+    /* Warm amber accent maintained */
+    --accent: 45 85% 60%;
+    --accent-foreground: 160 25% 8%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 30 15% 92%;
+
+    --border: 160 15% 22%;
+    --input: 160 15% 22%;
+    --ring: 228 85% 70%;
+
+    /* Custom dark tokens */
+    --primary-light: 228 80% 75%;
+    --primary-glow: 228 65% 85%;
+    --earth-warm: 25 25% 35%;
+    --earth-deep: 20 35% 15%;
+    
+    /* Dark gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(228 85% 70%), hsl(228 80% 75%));
+    --gradient-hero: linear-gradient(135deg, hsl(228 85% 70%), hsl(45 85% 60%));
+    --gradient-subtle: linear-gradient(180deg, hsl(160 25% 8%), hsl(160 20% 12%));
+    
+    /* Dark shadows */
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-button: 0 2px 4px hsl(228 85% 70% / 0.3);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
