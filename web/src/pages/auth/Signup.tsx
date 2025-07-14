@@ -47,11 +47,7 @@ const registerSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-interface RegisterProps {
-  onRegisterSuccess: () => void;
-}
-
-const Signup = ({ onRegisterSuccess }: RegisterProps) => {
+const Signup = () => {
   const { toast } = useToast();
   const [loading, setLoading] = React.useState(false);
 
