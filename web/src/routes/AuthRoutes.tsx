@@ -5,6 +5,8 @@ import Index from "@/pages/Index";
 import VerifyAccount from "@/pages/auth/VerifyAccount";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import { UserProfile } from "@/pages/profile/UserProfile";
+import DeleteAccountInfo from "@/pages/profile/DeleteAccountInfo";
+import NotFound from "@/pages/NotFound";
 const AuthRoutes = {
   children: [
     {
@@ -35,6 +37,14 @@ const AuthRoutes = {
     {
       path: "/profile",
       element: <UserProfile />,
+    },
+    {
+      path: "/account-deletion-info",
+      element: <DeleteAccountInfo />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ],
 };
