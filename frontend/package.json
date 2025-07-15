@@ -9,8 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "build": "eas build --platform android --profile preview",
-    "build:apk": "eas build --platform android --profile production",
+    "build": "eas build --platform android --profile production",
+    "build:test": "eas build --platform android --profile testing",
     "update": "npx expo install --fix"
   },
   "dependencies": {
