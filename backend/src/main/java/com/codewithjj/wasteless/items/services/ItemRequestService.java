@@ -9,6 +9,8 @@ public interface ItemRequestService {
     ItemRequest createRequest(RequestCreationDTO requestCreationDTO);
     ItemRequest getRequestById(String id);
     List<ItemRequest> getAllRequestsByUserId(String userId);
+    List<ItemRequest> getIncomingRequestsByUserId(String userId);
+    List<ItemRequest> getOutgoingRequestsByUserId(String userId);
     String deleteRequestById(String id);
     ItemRequest acceptRequest(String id);
     ItemRequest rejectRequest(String id);

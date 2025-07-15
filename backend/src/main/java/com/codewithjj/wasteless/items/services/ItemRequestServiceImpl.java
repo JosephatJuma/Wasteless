@@ -50,6 +50,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    public List<ItemRequest> getIncomingRequestsByUserId(String userId) {
+        UUID id = UUID.fromString(userId);
+        return itemRequestRepo.getIncomingRequestsByUserId(id);
+    }
+
+    @Override
+    public List<ItemRequest> getOutgoingRequestsByUserId(String userId) {
+        UUID id = UUID.fromString(userId);
+        return itemRequestRepo.getOutgoingRequestsByUserId(id);
+    }
+
+    @Override
     public String deleteRequestById(String id) {
         try {
             UUID requestId = UUID.fromString(id);
