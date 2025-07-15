@@ -39,7 +39,7 @@ const RequestItemScreen = () => {
     try {
       return data ? JSON.parse(data.toString()) : {};
     } catch (err: any) {
-      console.log(err);
+      setError(err?.message ?? "Something went wrong");
       return {};
     }
   }, [data]);
@@ -94,7 +94,13 @@ const RequestItemScreen = () => {
       Alert.alert("Success", "Item requested successfully!");
       router.back();
     } catch (err: any) {
-      setError(err.message);
+      if (err.status === 409) {
+        setError(
+          "You have already sent a request for this item, you can not request it again!"
+        );
+      } else {
+        setError(err.message);
+      }
     } finally {
       setRequesting(false);
     }
