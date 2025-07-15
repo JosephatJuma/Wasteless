@@ -79,14 +79,14 @@ const LoginScreen = () => {
         >
           Login
         </FormButton>
-        <FormButton
+        {/* <FormButton
           disabled={loading}
           onPress={() => {}}
           icon={"google"}
           mode="outlined"
         >
           Login with Google
-        </FormButton>
+        </FormButton> */}
         <TouchableOpacity onPress={() => router.navigate("/register")}>
           <Text style={[styles.signupText, styles.text]}>
             Don&#39;t have an account?{" "}
