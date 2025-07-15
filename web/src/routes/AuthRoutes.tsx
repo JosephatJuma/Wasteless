@@ -4,6 +4,7 @@ import OAuthCallback from "@/pages/auth/OAuthCallback ";
 import Index from "@/pages/Index";
 import VerifyAccount from "@/pages/auth/VerifyAccount";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import { UserProfile } from "@/pages/profile/UserProfile";
 const AuthRoutes = {
   children: [
     {
@@ -30,6 +31,10 @@ const AuthRoutes = {
     {
       path: "/privacy-policy",
       element: <PrivacyPolicy />,
+    },
+    {
+      path: "/profile",
+      element: <UserProfile />,
     },
   ],
 };
