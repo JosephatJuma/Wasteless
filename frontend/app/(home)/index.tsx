@@ -64,29 +64,44 @@ export default function GiveawayScreen() {
     try {
       setLoading(true);
       setError("");
-      const { data } = await apiClient.get(url);
+      const fetchUrl = currentLocation
+        ? `/items/location/${currentLocation.coords.latitude}/${currentLocation.coords.longitude}/0/${limit}`
+        : `/items`;
+
+      const { data } = await apiClient.get(fetchUrl);
       setItems(data);
+      setPage(1); // set to 1 for next page
     } catch (error) {
       setError((error as Error)?.message ?? "Something went wrong");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentLocation, limit]);
 
   const handleLoadMore = useCallback(async () => {
-    if (loading || items.length % limit !== 0) return; //No more items
+    if (loading || items.length <= 0 || items.length % limit !== 0) return;
 
     try {
       setLoading(true);
-      const { data } = await apiClient.get(url);
-      setItems((prevItems) => [...prevItems, ...data]);
-      setPage((prevPage) => prevPage + 1);
+      const fetchUrl = currentLocation
+        ? `/items/location/${currentLocation.coords.latitude}/${currentLocation.coords.longitude}/${items.length}/${limit}`
+        : `/items`;
+
+      const { data } = await apiClient.get(fetchUrl);
+
+      // Only append if there are new items
+      if (data.length > 0) {
+        setItems((prevItems) => [...prevItems, ...data]);
+        if (data.length === limit) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      }
     } catch (error) {
       setError((error as Error)?.message ?? "Something went wrong");
     } finally {
       setLoading(false);
     }
-  }, [loading, items.length, limit, url]);
+  }, [loading, items.length, limit, page, currentLocation]);
 
   const handleRefresh = useCallback(() => {
     setPage(0);
@@ -199,6 +214,7 @@ export default function GiveawayScreen() {
           windowSize={21}
           removeClippedSubviews={true}
           onEndReached={handleLoadMore}
+          //onTouchEnd={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={loading ? <ActivityIndicator /> : null}
           // getItemLayout={(data, index) => ({
