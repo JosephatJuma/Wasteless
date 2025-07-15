@@ -1,5 +1,6 @@
 import { apiClient } from "@/api/api_client";
 import ErrorBanner from "@/components/alerts/ErrorBanner";
+import OutgoingRequestItemCard from "@/components/items/OutgoingItemRequest";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -13,7 +14,6 @@ import {
   Text,
   useTheme,
 } from "react-native-paper";
-
 const tabs = ["Incoming", "Outgoing"];
 
 const MyRequestsScreen = () => {
@@ -21,7 +21,7 @@ const MyRequestsScreen = () => {
   const { colors } = useTheme();
   const router = useRouter();
 
-  const [selectedTab, setSelectedTab] = useState("Incoming");
+  const [selectedTab, setSelectedTab] = useState("Outgoing");
   const [incomingRequests, setIncomingRequests] = useState<any[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +37,7 @@ const MyRequestsScreen = () => {
       setIncomingRequests(incomingRes.data);
       setOutgoingRequests(outgoingRes.data);
     } catch (err) {
+      console.log(err);
       setError("Failed to load requests.");
     } finally {
       setLoading(false);
@@ -50,7 +51,7 @@ const MyRequestsScreen = () => {
   const renderRequestItem = (request: any) => (
     <View key={request.id}>
       <List.Item
-        title={request.item_name}
+        title={request?.item?.title}
         description={`From: ${request.requested_by?.display_name ?? "Unknown"}`}
         left={() => <List.Icon icon="package-variant" />}
         right={() => (
@@ -83,7 +84,7 @@ const MyRequestsScreen = () => {
             onPress={() => setSelectedTab(tab)}
             mode={selectedTab === tab ? "contained" : "text"}
             style={styles.tabButton}
-            labelStyle={{ fontFamily: "OutFitBold" }}
+            labelStyle={{ fontFamily: "OutFitBold", color: "#fff" }}
           >
             {tab}
           </Button>
@@ -103,7 +104,9 @@ const MyRequestsScreen = () => {
             No {selectedTab.toLowerCase()} requests found.
           </Text>
         ) : (
-          requestsToShow.map(renderRequestItem)
+          requestsToShow.map((item, index) => (
+            <OutgoingRequestItemCard key={index} request={item} />
+          ))
         )}
       </ScrollView>
 
