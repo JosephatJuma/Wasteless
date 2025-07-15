@@ -1,5 +1,6 @@
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
@@ -93,13 +94,14 @@ export function Footer() {
                   Contact Us
                 </a>
               </li>
+
               <li>
-                <a
-                  href="privacy-policy"
+                <Link
+                  to="/privacy-policy"
                   className="hover:text-primary transition-colors"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
