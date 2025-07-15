@@ -15,11 +15,11 @@ public interface ItemRequestRepo extends JpaRepository<ItemRequest, UUID> {
     SELECT r.* 
     FROM requests r
     JOIN items i ON r.item_id = i.id
-    WHERE r.status = 1
+    WHERE r.status = 0
       AND i.user_id = :userId
     """, nativeQuery = true)
     List<ItemRequest> getIncomingRequestsByUserId(UUID userId);
-    @Query(value = "SELECT * FROM requests WHERE status = 1 AND user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM requests WHERE user_id = :userId", nativeQuery = true)
     List<ItemRequest> getOutgoingRequestsByUserId(UUID userId);
 
 }
