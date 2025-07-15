@@ -147,13 +147,13 @@ const RegisterScreen = () => {
           Register
         </FormButton>
 
-        <FormButton
+        {/* <FormButton
           mode="outlined"
           onPress={() => console.log("Google Sign-Up")}
           icon={"google"}
         >
           Sign Up with Google
-        </FormButton>
+        </FormButton> */}
 
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={styles.footerText}>

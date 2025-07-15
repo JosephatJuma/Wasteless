@@ -51,7 +51,6 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({
           coords: position.coords,
           timestamp: position.timestamp,
         });
-        console.log(position.coords);
       },
       (error) => {
         setCurrentLocation({

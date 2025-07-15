@@ -1,4 +1,5 @@
 import { apiClient } from "@/api/api_client";
+import ErrorBanner from "@/components/alerts/ErrorBanner";
 import FormButton from "@/components/forms/FormButton";
 import { useAuth } from "@/context/AuthContext";
 import { useLocation } from "@/context/LocationContext";
@@ -24,9 +25,11 @@ const RequestItemScreen = () => {
   const { colors } = useTheme();
   const { user } = useAuth();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const { getDistanceFromLatLonInMeters } = useLocation();
+  const { getDistanceFromLatLonInMeters, currentLocation } = useLocation();
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [requesting, setRequesting] = useState<boolean>(false);
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
@@ -36,7 +39,7 @@ const RequestItemScreen = () => {
     try {
       return data ? JSON.parse(data.toString()) : {};
     } catch (err: any) {
-      console.log(err);
+      setError(err?.message ?? "Something went wrong");
       return {};
     }
   }, [data]);
@@ -53,7 +56,7 @@ const RequestItemScreen = () => {
       Alert.alert("Success", "Item deleted successfully!");
       router.replace("/(home)");
     } catch (err: any) {
-      console.log(err);
+      setError(err.response.data.message);
     } finally {
       setIsDeleting(false);
     }
@@ -70,6 +73,36 @@ const RequestItemScreen = () => {
       setActiveImageIndex((prev) =>
         prev === 0 ? item.images.length - 1 : prev - 1
       );
+    }
+  };
+
+  const handleItemRequest = async () => {
+    setRequesting(true);
+    try {
+      await apiClient.post(`/requests`, {
+        itemId: item.id,
+        userId: user?.id,
+        notes: "",
+        location: {
+          latitude: currentLocation?.coords?.latitude,
+          longitude: currentLocation?.coords?.longitude,
+          accuracy: currentLocation?.coords?.accuracy,
+          address: "",
+          city: "",
+        },
+      });
+      Alert.alert("Success", "Item requested successfully!");
+      router.back();
+    } catch (err: any) {
+      if (err.status === 409) {
+        setError(
+          "You have already sent a request for this item, you can not request it again!"
+        );
+      } else {
+        setError(err.message);
+      }
+    } finally {
+      setRequesting(false);
     }
   };
 
@@ -196,7 +229,12 @@ const RequestItemScreen = () => {
                 </FormButton>
               </View>
             ) : (
-              <FormButton onPress={() => {}} style={styles.button}>
+              <FormButton
+                onPress={handleItemRequest}
+                disabled={requesting}
+                loading={requesting}
+                style={styles.button}
+              >
                 Request This Item
               </FormButton>
             )}
@@ -240,6 +278,8 @@ const RequestItemScreen = () => {
           All associated data will be permanently removed.
         </Text>
       </Banner>
+
+      <ErrorBanner error={error} setError={setError} />
     </View>
   );
 };

@@ -61,7 +61,7 @@ export function FeaturedItems() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {/* {items.map((item, index) => (
+            {items.map((item, index) => (
               <div
                 key={index}
                 className="animate-fade-in-up"
@@ -69,7 +69,7 @@ export function FeaturedItems() {
               >
                 <ItemCard item={item} />
               </div>
-            ))} */}
+            ))}
           </div>
 
           <div className="text-center">

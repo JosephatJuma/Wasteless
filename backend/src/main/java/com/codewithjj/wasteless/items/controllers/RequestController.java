@@ -37,6 +37,16 @@ public class RequestController {
         List<ItemRequest> createdItemRequest = itemRequestService.getAllRequestsByUserId(userId);
         return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
     }
+    @GetMapping("incoming/{userId}")
+    public  ResponseEntity<List<ItemRequest>> getIncomingRequestsByUserId(@PathVariable String userId) {
+        List<ItemRequest> createdItemRequest = itemRequestService.getIncomingRequestsByUserId(userId);
+        return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
+    }
+    @GetMapping("outgoing/{userId}")
+    public  ResponseEntity<List<ItemRequest>> getOutgoingRequestsByUserId(@PathVariable String userId) {
+        List<ItemRequest> createdItemRequest = itemRequestService.getOutgoingRequestsByUserId(userId);
+        return new ResponseEntity<>(createdItemRequest, HttpStatus.CREATED);
+    }
     @PatchMapping("{id}/reject")
     public  ResponseEntity<ItemRequest> rejectRequest(@PathVariable String id) {
         ItemRequest createdItemRequest = itemRequestService.rejectRequest(id);

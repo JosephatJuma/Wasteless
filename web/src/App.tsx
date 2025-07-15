@@ -8,26 +8,31 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-
+import { useEffect, useState } from "react";
+import router from "./routes";
+import { RouterProvider } from "react-router-dom";
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("auth"));
+    if (user?.session) {
+      setIsAuthenticated(true);
+    }
+    // console.log(user);
+  }, [isAuthenticated]);
+  // Simple auth check - in a real app, you'd check a token or session
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <RouterProvider router={router} />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

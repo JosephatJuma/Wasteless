@@ -17,7 +17,7 @@ export function ItemCard({ item }: ItemCardProps) {
     item?.location?.latitude as number,
     item?.location?.longitude as number
   );
-  console.log(distance);
+
   return (
     <Card className="group overflow-hidden border-0 shadow-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-card">
       <div className="aspect-[4/3] overflow-hidden bg-muted">
