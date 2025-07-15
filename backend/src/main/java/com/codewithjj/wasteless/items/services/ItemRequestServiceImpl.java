@@ -1,5 +1,6 @@
 package com.codewithjj.wasteless.items.services;
 
+import com.codewithjj.wasteless.exceptions.ConflictException;
 import com.codewithjj.wasteless.exceptions.NotValidUUIDException;
 import com.codewithjj.wasteless.exceptions.ResourceNotFoundException;
 import com.codewithjj.wasteless.items.dtos.RequestCreationDTO;
@@ -9,6 +10,9 @@ import com.codewithjj.wasteless.items.enums.RequestStatus;
 import com.codewithjj.wasteless.items.repositories.ItemRepository;
 import com.codewithjj.wasteless.items.repositories.ItemRequestRepo;
 import org.springframework.stereotype.Service;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,12 +28,21 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequest createRequest(RequestCreationDTO dto) {
-        Item item = itemRepository.findById(dto.getItemId()).orElseThrow(()->new ResourceNotFoundException("The Item selected no longer exists"));
+        Item item = itemRepository.findById(dto.getItemId())
+                .orElseThrow(() -> new ResourceNotFoundException("The Item selected no longer exists"));
+
+        ItemRequest existingRequest = itemRequestRepo.findByUserIdAndItemId(dto.getUserId(), dto.getItemId());
+        if (existingRequest != null) {
+            //throw new ResponseStatusException(HttpStatus.CONFLICT, "User already requested this item");
+            throw new ConflictException("You have already made a request for this item");
+        }
+
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setUserId(dto.getUserId());
         itemRequest.setItem(item);
         itemRequest.setNotes(dto.getNotes());
         item.setLocation(dto.getLocation());
+
         return itemRequestRepo.save(itemRequest);
     }
 

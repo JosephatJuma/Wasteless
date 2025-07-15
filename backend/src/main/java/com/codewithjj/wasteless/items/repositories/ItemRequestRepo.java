@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ItemRequestRepo extends JpaRepository<ItemRequest, UUID> {
     List<ItemRequest> findByUserId(UUID userId);
     List<ItemRequest> findByItemId(UUID itemId);
-
+    ItemRequest findByUserIdAndItemId(UUID userId, UUID itemId);
     @Query(value = """
     SELECT r.* 
     FROM requests r
