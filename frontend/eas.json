@@ -17,9 +17,9 @@
         "buildType": "apk"
       }
     },
-    "development": {
+    "testing": {
       "autoIncrement": true,
-      "developmentClient": true,
+      "developmentClient": false,
       "android": {
         "buildType": "apk"
       }
